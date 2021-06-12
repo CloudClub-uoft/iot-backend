@@ -12,3 +12,5 @@ app.use('/device', routes); //to use the routes
 const listener = app.listen(process.env.PORT || 3000, () => {
     console.log('Your app is listening on port ' + listener.address().port)
 })
+
+if (!process.env.PRODUCTION) module.exports = app; //export for testing

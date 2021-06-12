@@ -24,5 +24,8 @@
     "faker": "^5.5.3",
     "mocha": "^9.0.0",
     "mongoose": "^5.12.13"
+  },
+  "devDependencies": {
+    "chai-http": "^4.3.0"
   }
 }
