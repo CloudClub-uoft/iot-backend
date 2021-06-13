@@ -16,7 +16,7 @@ const registerDevice = (req, res, next) => {
     deviceId: mac,
     friendlyName: name,
     uuid,
-    apikey: apiKey,
+    apiKey: apiKey,
   }).save();
 
   return res.status(200).json({ apiKey });
@@ -27,7 +27,16 @@ const deviceInfo = (req, res, next) => {
   // INPUT: API key
   // the device information is provided
   // OUTPUT: firendly name
-  res.sendStatus(404);
+  const apiKey = req.body.apiKey;
+  var myDevice = mongoose.model('Device');
+  myDevice.findOne({apiKey: apiKey}, 'friendlyName', function (err, foundDevice) {
+    if (err) {
+      return res.status(400);
+    }
+    else {
+      return res.status(200).json({ friendlyName: foundDevice.friendlyName });
+    }
+  });
 };
 
 const unregisterDevice = (req, res, next) => {
