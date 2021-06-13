@@ -7,15 +7,14 @@ module.exports = (app, db) => {
     // INPUT: HARDWARE ID, friendly-name
     // the device information is stored
     // OUTPUT: success/failure
-    const { mac, name } = req.body;
+    const { deviceId, friendlyName } = req.body;
     const { uuid, apiKey } = uuidApiKey.create();
   
-    const Device = db.model('Device');
-    new Device({
-      deviceId: mac,
-      friendlyName: name,
-      uuid,
-      apikey: apiKey,
+    new db.model('Device') ({
+      deviceId: deviceId,
+      friendlyName: friendlyName,
+      uuid: uuid,
+      apiKey: apiKey,
     }).save();
   
     return res.status(200).json({ apiKey });
