@@ -1,16 +1,17 @@
-const express = require ('express');
+const express = require('express');
 const routes = require('./routes/device'); // import the routes
-require('./util/env').configure() //configure the environment variables
+require('./util/env').configure(); // configure the environment variables
 require('./util/connection');
 
 const app = express();
 
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-app.use('/device', routes); //to use the routes
+app.use('/device', routes); // to use the routes
 
 const listener = app.listen(process.env.PORT || 3000, () => {
-    console.log('Your app is listening on port ' + listener.address().port)
-})
+  console.log(`Your app is listening on port ${listener.address().port}`);
+});
 
-if (!process.env.PRODUCTION) module.exports = app; //export for testing
+if (!process.env.PRODUCTION) module.exports = app; // export for testing

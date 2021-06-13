@@ -1,5 +1,6 @@
 const express = require('express');
-const router  = express.Router();
+
+const router = express.Router();
 const deviceController = require('../controllers/device');
 
 router.post('/register', deviceController.registerDevice);

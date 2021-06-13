@@ -2,7 +2,7 @@
   "name": "iot-device",
   "version": "1.0.0",
   "description": "Device hardware and software for the CloudClub IoT project.",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
     "test": "mocha"
   },
@@ -29,6 +29,8 @@
   "devDependencies": {
     "chai-http": "^4.3.0",
     "eslint": "^7.28.0",
-    "eslint-config-airbnb-base": "^14.2.1"
+    "eslint-config-airbnb": "^18.2.1",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.23.4"
   }
 }
