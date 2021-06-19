@@ -4,21 +4,38 @@ const { assert } = require('chai');
 const mongoose = require('mongoose');
 const server = require('../app');
 const app = require('../app');
+Device = require('../models/device');
 
 chai.use(chaiHttp);
 const faker = require('faker');
 
 const temp_mac = faker.internet.mac();
 
-//register a temp device
-chai.request(app)
-      .post('/device/register')
-      .send({ deviceId: temp_mac, friendlyName: faker.internet.userName() })
-      .end((err, res) => {
-      })
 
 //test case: attempt to remove the device
 describe('/POST device/unregister', () => {
+
+  //register temporary device
+  before( function() {
+    new mongoose.model('Device') ({
+      deviceId: temp_mac,
+      friendlyName: 'friendlyName',
+      uuid: 'test',
+      apiKey: 'test',
+    }).save();
+  });
+
+  //verify the unregistration was successful
+  after(function() {
+    Device.findOne({deviceId: temp_mac}, function (err, foundDevice) {
+      //catch errors
+      assert(err == null, 'Error in finding device');
+
+      //foundDevice should equal null when not found in db
+      assert.isNull(foundDevice);
+    });
+  });
+
   it('it should use POST to remove the information', (done) => {
     chai.request(app)
       .post('/device/unregister')
@@ -29,17 +46,3 @@ describe('/POST device/unregister', () => {
       })
   });
 });
-
-//test case: verify the device is gone
-//should return 404 indicating the db entry is not found
-describe('/GET /device/info verify the entry is gone', () => {
-  it('it should use GET to verify the device is gone', (done) => {
-    chai.request(server)
-      .get('/device/info')
-      .end((err, res) => {
-        assert.equal(res.statusCode, 404);
-        done();
-      });
-  });
-});
-
