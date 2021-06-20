@@ -1,38 +1,38 @@
-const chaiHttp = require('chai-http');
 const chai = require('chai');
-const { assert } = require('chai');
-const mongoose = require('mongoose');
-const server = require('../app');
+const chaiHttp = require('chai-http');
 const faker = require('faker');
 const uuidApiKey = require('uuid-apikey');
+
+const app = require('../app');
 const Device = require('../models/device');
 
+const { expect } = chai;
 chai.use(chaiHttp);
 
-const temp_mac = faker.internet.mac();
-const temp_name = faker.internet.userName();
-const { uuid, apiKey } = uuidApiKey.create();
-
-//register a temp device
-new mongoose.model('Device') ({
-  deviceId: temp_mac,
-  friendlyName: temp_name,
-  uuid: uuid,
-  apiKey: apiKey,
-}).save();
-    
-//test
 describe('/GET device/info', () => {
-  it('it should GET the information', (done) => {
-    chai.request(server)
-      .get('/device/info')
-      .send({apiKey: apiKey})
-      .end((err, res) => {
-        assert.equal(res.statusCode, 200);
-        done();
-      });
-  });
-});
+  const tempMac = faker.internet.mac();
+  const tempName = faker.internet.userName();
+  const { uuid, apiKey } = uuidApiKey.create();
 
-//delete temp device
-Device.deleteOne({ deviceId: temp_mac });
+  before(() => {
+    // Register a temp device
+    new Device({
+      deviceId: tempMac,
+      friendlyName: tempName,
+      uuid,
+      apiKey,
+    }).save();
+  });
+
+  it('it should GET the device information', (done) => {
+    chai.request(app)
+      .get(`/device/info?mac=${tempMac}`)
+      .end((_, res) => {
+        expect(res.statusCode).to.equal(200);
+        expect(res.friendlyName).to.equal(tempName);
+      });
+    done();
+  });
+
+  after(() => { Device.deleteOne({ deviceId: tempMac }); });
+});
