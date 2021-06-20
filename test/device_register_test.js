@@ -1,10 +1,11 @@
-const chaiHttp = require('chai-http');
 const chai = require('chai');
-const { assert } = require('chai');
-const mongoose = require('mongoose');
-const app = require('../app');
-const faker = require('faker')
+const chaiHttp = require('chai-http');
+const faker = require('faker');
 
+const app = require('../app');
+const Device = require('../models/device');
+
+const { expect } = chai;
 chai.use(chaiHttp);
 
 describe('/POST device/register', () => {
@@ -12,11 +13,11 @@ describe('/POST device/register', () => {
     chai.request(app)
       .post('/device/register')
       .send({ deviceId: faker.internet.mac(), friendlyName: faker.internet.userName() })
-      .end((err, res) => {
-        mongoose.model('Device').findOneAndDelete({ apiKey: res.body.apiKey }, (err, doc) => {
-          if (err) return done(err);
-          assert(doc).done();
-        })
+      .end((_, res) => {
+        Device.findOneAndDelete({ apiKey: res.body.apiKey }, (__, doc) => {
+          expect(doc);
+        });
+        done();
       });
   });
 });

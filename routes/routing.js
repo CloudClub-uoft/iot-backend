@@ -3,19 +3,20 @@ const path = require('path');
 
 const routePath = path.resolve(__dirname);
 
-exports.boot = (app, db) => {
+exports.boot = (app) => {
   (function traverse(dir) {
     fs.readdirSync(dir).forEach((file) => {
-      let dirPath = path.join(dir, file);
-      let isDirectory = fs.lstatSync(dirPath).isDirectory()
+      const dirPath = path.join(dir, file);
+      const isDirectory = fs.lstatSync(dirPath).isDirectory();
       if (isDirectory) traverse(dirPath);
       if (file !== 'routing.js' && !isDirectory) {
       // routes/filename, slicing off '.js'
         const cleanPath = `${dir}/${file.substr(0, file.indexOf('.'))}`;
         const route = path.resolve(cleanPath);
         // load the route
-        require(route)(app, db);
+        // eslint-disable-next-line import/no-dynamic-require, global-require
+        require(route)(app);
       }
     });
   }(routePath));
-}
+};
