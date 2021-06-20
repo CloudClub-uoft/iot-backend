@@ -1,9 +1,8 @@
 module.exports = {
   env: {
-    browser: true,
-    commonjs: true,
     es2021: true,
     node: true,
+    mocha: true,
   },
   extends: [
     'airbnb-base',
@@ -14,8 +13,5 @@ module.exports = {
   rules: {
     'no-console': 'off',
     'consistent-return': 'off',
-    'object-curly-newline': ['error', {
-      ObjectPattern: 'off',
-    }],
   },
 };
