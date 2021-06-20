@@ -18,7 +18,7 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     env:
-      URI_MONGO ${{ env.URI_MONGO }}
+      URI_MONGO ${{ secrets.TEST_URI_MONGO }}
     steps:
     - uses: actions/checkout@v2
     - name: Use Node.js ${{ matrix.node-version }}
