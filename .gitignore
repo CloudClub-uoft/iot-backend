@@ -23,3 +23,6 @@ yarn-error.log*
 
 #rest
 *.rest
+
+#local uploads
+/uploads
