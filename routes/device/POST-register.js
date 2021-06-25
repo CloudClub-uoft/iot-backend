@@ -9,6 +9,7 @@ module.exports = (app) => {
     // the device information is stored
     // OUTPUT: success/failure
     const { deviceId, friendlyName } = req.body;
+    if (!deviceId || !deviceId.match(/^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$/) || !friendlyName) return res.status(400).json({ error: 'Bad Request' });
     const { uuid, apiKey } = uuidApiKey.create();
 
     new Device({
