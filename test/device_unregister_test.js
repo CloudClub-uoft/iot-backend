@@ -11,14 +11,14 @@ chai.use(chaiHttp);
 describe('/POST device/unregister', () => {
   const tempMac = faker.internet.mac();
 
-  before(() => {
+  before((done) => {
     // Register temporary device
     new Device({
       deviceId: tempMac,
       friendlyName: 'friendlyName',
       uuid: 'test',
       apiKey: 'test',
-    }).save();
+    }).save().then(() => done());
   });
 
   it('it should use POST to remove the information', (done) => {

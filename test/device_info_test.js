@@ -14,25 +14,25 @@ describe('/GET device/info', () => {
   const tempName = faker.internet.userName();
   const { uuid, apiKey } = uuidApiKey.create();
 
-  before(() => {
+  before((done) => {
     // Register a temp device
     new Device({
       deviceId: tempMac,
       friendlyName: tempName,
       uuid,
       apiKey,
-    }).save();
+    }).save().then(() => done());
   });
 
   it('it should GET the device information', (done) => {
     chai.request(app)
-      .get(`/device/info?mac=${tempMac}`)
+      .get(`/device/info?mac=${tempMac.replace(/:/g, '')}`)
       .end((_, res) => {
         expect(res.statusCode).to.equal(200);
-        expect(res.friendlyName).to.equal(tempName);
+        expect(res.body.friendlyName).to.equal(tempName);
       });
     done();
   });
 
-  after(() => { Device.deleteOne({ deviceId: tempMac }); });
+  after((done) => { Device.deleteOne({ deviceId: tempMac }).then(() => done()); });
 });
