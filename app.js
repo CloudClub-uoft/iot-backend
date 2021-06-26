@@ -1,5 +1,6 @@
 require('./util/env').configure(); // configure the environment variables
-require('./util/connection'); // configure mongoose db connection
+require('./util/mongodb'); // configure mongoose db connection
+require('./util/aedes'); // configure MQTT broker
 const express = require('express');
 
 // Express config
@@ -8,10 +9,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 // Dynamic route loading
-require('./routes/routing').boot(app);
+require('./util/router').boot(app);
 
-const listener = app.listen(process.env.PORT || 3000, () => {
-  console.log(`Your app is listening on port ${listener.address().port}`);
+app.listen(process.env.PORT || 3000, function listen() {
+  console.log(`Express server started and listening on port ${this.address().port}`);
 });
 
 if (!process.env.PRODUCTION) module.exports = app; // export for testing

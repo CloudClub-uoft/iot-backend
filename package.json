@@ -17,9 +17,11 @@
   },
   "homepage": "https://github.com/CloudClub-uoft/iot-device#readme",
   "dependencies": {
+    "aedes": "^0.46.0",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "mongoose": "^5.12.13",
+    "mqtt": "^4.2.8",
     "uuid-apikey": "^1.5.2"
   },
   "devDependencies": {
