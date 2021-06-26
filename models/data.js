@@ -6,10 +6,10 @@ const dataScehma = new mongoose.Schema({
     required: true,
   },
   temperature: {
-      type: String,
+    type: String,
   },
   location: {
-        type: Latitude,
+    type: String,
   },
   timestamp: {
     type: Date,
@@ -17,7 +17,7 @@ const dataScehma = new mongoose.Schema({
   },
 });
 
-const Data = mongoose.model('Device', deviceSchema);
+const Data = mongoose.model('Data', dataScehma);
 module.exports = Data;
 
 
