@@ -2,7 +2,7 @@ const Device = require('../../models/device');
 
 module.exports = (app) => {
   app.get('/device/info', (req, res) => {
-    if (!req.query.mac) return res.status(400);
+    if (!req.query.mac) return res.status(400).json({ error: 'No MAC address provided.' });
     // Take MAC address with no symbols as query parameter and reformat with colons
     const mac = req.query.mac.replace(/(..)/g, '$1:').slice(0, -1);
     Device.findOne({ deviceId: mac }, 'friendlyName', (err, foundDevice) => {
