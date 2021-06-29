@@ -46,7 +46,7 @@ module.exports = (app) => {
       // this is called when a file upload is begining
       // specify the location that the file is uploaded to
       if (deviceId === '' || deviceId == null) {
-        return res.status(500).json({ error: 'Server error: could not find device mac address in request' });
+        return res.status(400).json({ error: 'Server error: could not find device mac address in request' });
       }
       file.path = path.join(__dirname, '..', '..', 'uploads', deviceId, file.name);
     });
