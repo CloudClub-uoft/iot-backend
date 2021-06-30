@@ -1,54 +1,87 @@
 const formidable = require('formidable');
-const path = require('path');
-const fs = require('fs');
+const { PassThrough } = require('stream');
+const AWS = require('aws-sdk');
 
 module.exports = (app) => {
   app.post('/data/blob', (req, res, next) => {
+    const s3Client = new AWS.S3({
+      credentials: {
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+        secretAccessKey: process.env.AWS_SECRET_KEY,
+      },
+      computeChecksums: true,
+    });
+
+    const uploadStream = (file) => {
+      const pass = new PassThrough();
+      s3Client.upload(
+        {
+          Bucket: process.env.BUCKET_NAME,
+          Key: file.originalFilename,
+          Body: pass,
+        },
+        (err, objectInfo) => {
+          if (err) {
+            next(err);
+            return res.status(500).json({ error: 'Server error while uploading file' });
+          }
+
+          // once this callback is called, return status 201 with the
+          // URI under the location field in objectInfo
+          return res.status(201).json(objectInfo);
+        },
+      );
+      return pass;
+    };
+
     const form = formidable({
       // allow multiple files to upload simultaneously
       multiples: true,
       // 1mb upload limit
       maxFileSize: 1024 * 1024 * 1,
+      fileWriteStreamHandler: uploadStream,
     });
 
-    // this needs to be in global scope, but must be defined inside the form.on method
+    // this needs to be in global scope, but must be defined inside the form.on('field') method
     let deviceId = '';
 
     // is called when a field is found in the form
     form.on('field', (fieldName, value) => {
-      // if the field is named deviceId, extract the mac address
       if (fieldName === 'deviceId') {
         // uses regex to replace all colons and periods with dashs
         // since mac addresses have several valid formats
         deviceId = value.replace(/:|\./g, '-');
-
-        // get the uploads directory path
-        const uploadsDir = path.join(__dirname, '..', '..', 'uploads');
-        // creates the directory if it does not exist
-        if (!fs.existsSync(uploadsDir)) {
-          fs.mkdirSync(uploadsDir);
-        }
-
-        // ensures the storage directory for the device's id exists
-        const storageDir = path.join(__dirname, '..', '..', 'uploads', deviceId);
-        if (!fs.existsSync(storageDir)) {
-          fs.mkdirSync(storageDir);
-        }
+      } else {
+        return res.status(400).json({ error: 'Only provide the device mac address under fieldname "deviceId"' });
       }
-    }).on('fileBegin', (name, file) => {
+    }).on('fileBegin', (_, file) => {
       // this is called when a file upload is begining
-      // specify the location that the file is uploaded to
-      file.path = path.join(__dirname, '..', '..', 'uploads', deviceId, file.name);
+      if (deviceId === '' || deviceId == null) {
+        return res.status(400).json({ error: 'Could not find device mac address in request' });
+      }
+
+      // update the filename to include the device mac address for searching
+      file.originalFilename = deviceId.concat('_', file.originalFilename);
+    }).on('error', (err) => {
+      // catches the error emmitted when the upload exceeds the max size
+      if (err.httpCode === 413) {
+        return res.status(413).json({ error: `The upload size is too large, must be under ${form.options.maxFileSize} bytes` });
+      }
+
+      // catch any other unexpected errors
+      return res.sendStatus(err.httpCode);
     });
 
-    form.parse(req, (err) => {
-      // let express handle the error
+    form.parse(req, (err, fields) => {
+      if (Object.keys(fields).length !== 1) {
+        // Bad request return code
+        return res.status(400).json({ error: 'Only provide the device mac address under fieldname "deviceId"' });
+      }
+      // let express handle other errors
       if (err) {
         next(err);
-        return res.sendStatus(500);
+        return res.status(500).json({ error: 'An unexpected error occured' });
       }
-
-      return res.sendStatus(204);
     });
   });
 };
