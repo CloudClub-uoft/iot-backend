@@ -1,6 +1,7 @@
 const formidable = require('formidable');
 const { PassThrough } = require('stream');
 const AWS = require('aws-sdk');
+const BlobLog = require('../../models/blobLog');
 
 module.exports = (app) => {
   app.post('/data/blob', (req, res, next) => {
@@ -25,6 +26,15 @@ module.exports = (app) => {
             next(err);
             return res.status(500).json({ error: 'Server error while uploading file' });
           }
+
+          // adds a record of the transaction to the mongo database if the upload succeeded
+          new BlobLog({
+            ETag: objectInfo.ETag,
+            versionId: objectInfo.VersionId,
+            location: objectInfo.Location,
+            key: objectInfo.key,
+            bucket: objectInfo.Bucket,
+          }).save();
 
           // once this callback is called, return status 201 with the
           // URI under the location field in objectInfo
