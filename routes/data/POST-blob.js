@@ -24,30 +24,44 @@ module.exports = (app) => {
 
         // get the uploads directory path
         const uploadsDir = path.join(__dirname, '..', '..', 'uploads');
-        // creates the directory if it does not exist
-        if (!fs.existsSync(uploadsDir)) {
-          fs.mkdirSync(uploadsDir);
-        }
+        try {
+          // creates the directory if it does not exist
+          if (!fs.existsSync(uploadsDir)) {
+            fs.mkdirSync(uploadsDir);
+          }
 
-        // ensures the storage directory for the device's id exists
-        const storageDir = path.join(__dirname, '..', '..', 'uploads', deviceId);
-        if (!fs.existsSync(storageDir)) {
-          fs.mkdirSync(storageDir);
+          // ensures the storage directory for the device's id exists
+          const storageDir = path.join(__dirname, '..', '..', 'uploads', deviceId);
+          if (!fs.existsSync(storageDir)) {
+            fs.mkdirSync(storageDir);
+          }
+        } catch (err) {
+          next(err);
+          return res.status(500).json({ error: 'Server error while creating upload directory' });
         }
+      } else {
+        return res.status(400).json({ error: 'Only provide the device mac address under fieldname "deviceId"' });
       }
     }).on('fileBegin', (name, file) => {
       // this is called when a file upload is begining
       // specify the location that the file is uploaded to
+      if (deviceId === '' || deviceId == null) {
+        return res.status(400).json({ error: 'Server error: could not find device mac address in request' });
+      }
       file.path = path.join(__dirname, '..', '..', 'uploads', deviceId, file.name);
     });
 
-    form.parse(req, (err) => {
+    form.parse(req, (err, fields) => {
+      if (Object.keys(fields).length !== 1) {
+        // Bad request return code
+        return res.status(400).json({ error: 'Only provide the device mac address under fieldname "deviceId"' });
+      }
+
       // let express handle the error
       if (err) {
         next(err);
-        return res.sendStatus(500);
+        return res.status(500).json({ error: 'Server error while uploading file' });
       }
-
       return res.sendStatus(204);
     });
   });
