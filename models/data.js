@@ -1,24 +1,25 @@
 const mongoose = require('mongoose');
-
-const dataScehma = new mongoose.Schema({
-  deviceId: {
-    type: String,
-    required: true,
-  },
-  temperature: {
-    type: String,
-  },
-  location: {
-    type: String,
-  },
-  timestamp: {
-    type: Date,
-    default: Date.now,
-  },
+const dataSchema = new mongoose.Schema ({
+    deviceId: {
+        type: String,
+        required: true,
+      },
+      temperature: {
+          type: String,
+      },
+      location: {
+            type: {
+                type: String,
+                default: 'Point',
+            },
+            coordinates: [Number],
+      },
+      timestamp: {
+        type: Date,
+        default: Date.now,
+      },
 });
 
-const Data = mongoose.model('Data', dataScehma);
+const Data = mongoose.model('Data', dataSchema);
 module.exports = Data;
 
-
-/// { temparture: 12, humidity: , pressure, windepsseed  }

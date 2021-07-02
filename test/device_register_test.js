@@ -9,15 +9,18 @@ const { expect } = chai;
 chai.use(chaiHttp);
 
 describe('/POST device/register', () => {
+  const tempMac = faker.internet.mac();
   it('it should POST the information', (done) => {
     chai.request(app)
       .post('/device/register')
-      .send({ deviceId: faker.internet.mac(), friendlyName: faker.internet.userName() })
+      .send({ deviceId: tempMac, friendlyName: faker.internet.userName() })
       .end((_, res) => {
-        Device.findOneAndDelete({ apiKey: res.body.apiKey }, (__, doc) => {
+        Device.findOne({ apiKey: res.body.apiKey }, (__, doc) => {
           expect(doc);
         });
         done();
       });
   });
+
+  after((done) => { Device.deleteOne({ deviceId: tempMac }).then(() => done()); });
 });
