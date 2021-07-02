@@ -5,6 +5,7 @@ const path = require('path');
 const md5 = require('md5');
 const fs = require('fs');
 const AWS = require('aws-sdk');
+const BlobLog = require('../models/blobLog');
 
 const app = require('../app');
 
@@ -41,8 +42,8 @@ describe('/POST data/blob', () => {
         if (err) {
           console.error(err);
         }
-        // terminate this test once the s3 deletion callback is done
-        done();
+        // terminate this test once the s3 deletion callback and mongo callback is done
+        BlobLog.deleteOne({ key: deviceId.concat('_', path.basename(checkFile)) }).then(() => done());
       },
     );
   });
@@ -62,10 +63,20 @@ describe('/POST data/blob', () => {
       .end((_, res) => {
         // Verify that the files were not modified in any way by comparing md5 hashes
         const originalHash = md5(fs.readFileSync(checkFile));
-
         // aws returns hashes surrounded by quotes, this regex removes them
         const awsHash = res.body.ETag.replace(/"/g, '');
         expect(awsHash).to.equal(originalHash);
+
+        // verify the upload was logged in mongo
+        BlobLog.findOne({ key: deviceId.concat('_', path.basename(checkFile)) }, (__, doc) => {
+          expect(doc);
+          expect(doc.ETag).to.equal(res.body.ETag);
+          expect(doc.versionId).to.equal(res.body.VersionId);
+          expect(doc.location).to.equal(res.body.Location);
+          expect(doc.key).to.equal(res.body.key);
+          expect(doc.bucket).to.equal(res.body.Bucket);
+        });
+
         expect(res.statusCode).to.equal(201);
         done();
       });
