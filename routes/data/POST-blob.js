@@ -92,6 +92,8 @@ module.exports = (app) => {
         next(err);
         return res.status(500).json({ error: 'An unexpected error occured' });
       }
+
     });
   });
 };
+
