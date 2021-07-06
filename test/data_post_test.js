@@ -10,11 +10,14 @@ const Data = require('../models/data');
 const { expect } = chai;
 chai.use(chaiHttp);
 
-describe('/GET data/new', () => {
+describe('/POST data/new', () => {
   const tempMac = faker.internet.mac();
   const tempName = faker.internet.userName();
   const tempTemperature = faker.datatype.number();
-  const tempLocation = faker.datatype.number();
+  const tempLocation = {
+    type: "Point",
+    coordinates: [faker.address.latitude(), faker.address.longitude()]
+  };
   const { uuid, apiKey } = uuidApiKey.create();
 
   before(() => {
@@ -30,7 +33,7 @@ describe('/GET data/new', () => {
   it('it should POST the data', (done) => {
     chai.request(app)
       .post('/data/new')
-      .send({ apiKey: apiKey, deviceId: tempMac, temperature: tempTemperature, location: tempLocation  })
+      .send({ apiKey: apiKey, deviceId: tempMac, temperature: tempTemperature, location: tempLocation })
       .end((_, res) => {
         expect(res.statusCode).to.equal(201);
         Data.findOne({ deviceId: tempMac }, (__, doc) => {
