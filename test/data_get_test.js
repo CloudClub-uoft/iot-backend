@@ -10,7 +10,7 @@ const Data = require('../models/data');
 const { expect } = chai;
 chai.use(chaiHttp);
 
-describe('/POST data/new', () => {
+describe('/GET device/getData', () => {
   const tempMac = faker.internet.mac();
   const tempName = faker.internet.userName();
   const tempTemperature = faker.datatype.number();
@@ -21,25 +21,28 @@ describe('/POST data/new', () => {
   const { uuid, apiKey } = uuidApiKey.create();
 
   before(() => {
-    // Register a temp device
+    // Register a temp device and Post temporary data
     new Device({
       deviceId: tempMac,
       friendlyName: tempName,
       uuid,
       apiKey,
     }).save();
+    new Data({
+        apiKey: apiKey,
+        deviceId: tempMac,
+        temperature: tempTemperature,
+        location: tempLocation
+    }).save();
   });
 
-  it('it should POST the data', (done) => {
+  it('it should GET the data', (done) => {
     chai.request(app)
-      .post('/data/new')
-      .send({ apiKey: apiKey, deviceId: tempMac, temperature: tempTemperature, location: tempLocation })
+      .get(`/device/getData?mac=${tempMac.replace(/:/g, '')}&points=1`)
       .end((_, res) => {
-        expect(res.statusCode).to.equal(201);
-        Data.findOne({ deviceId: tempMac }, (__, doc) => {
-            expect(doc.temperature).to.equal(tempTemperature);
-            expect(doc.location).to.equal(tempLocation);
-        });
+        expect(res.statusCode).to.equal(200);
+        expect(res.Data.location).to.equal(tempLocation);
+        expect(res.Data.temperature).to.equal(tempTemperature);
       });
     done();
   });
