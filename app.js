@@ -10,6 +10,8 @@ const fs = require('fs');
 const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+// TODO add production check for TLS or not
+app.use(cors({ origin: `http://localhost:${process.env.WEBAPP_PORT}` }));
 
 // Dynamic route loading
 require('./util/router').boot(app);
