@@ -21,7 +21,7 @@
     "aws-sdk": "^2.936.0",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
-    "formidable": "github:node-formidable/formidable",
+    "formidable": "^2.0.0-canary.20200504.1",
     "md5": "^2.3.0",
     "mongoose": "^5.12.13",
     "mqtt": "^4.2.8",
