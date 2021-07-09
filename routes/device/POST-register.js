@@ -13,7 +13,7 @@ module.exports = (app) => {
     const { uuid, apiKey } = uuidApiKey.create();
 
     new Device({
-      deviceId,
+      deviceId: deviceId.replace(/[:-]/, '').toLowerCase(),
       friendlyName,
       uuid,
       apiKey,
