@@ -15,8 +15,8 @@ describe('/POST data/new', () => {
   const tempName = faker.internet.userName();
   const tempTemperature = faker.datatype.number();
   const tempLocation = {
-    type: "Point",
-    coordinates: [Number(faker.address.latitude()), Number(faker.address.longitude())]
+    type: 'Point',
+    coordinates: [Number(faker.address.latitude()), Number(faker.address.longitude())],
   };
   const { uuid, apiKey } = uuidApiKey.create();
 
@@ -33,7 +33,9 @@ describe('/POST data/new', () => {
   it('it should POST the data', (done) => {
     chai.request(app)
       .post('/data/new')
-      .send({ apiKey: apiKey, deviceId: tempMac, temperature: tempTemperature, location: tempLocation })
+      .send({
+        apiKey, deviceId: tempMac, temperature: tempTemperature, location: tempLocation,
+      })
       .end((_, res) => {
         expect(res.statusCode).to.equal(201);
         Data.findOne({ deviceId: tempMac }, (__, doc) => {
@@ -44,9 +46,9 @@ describe('/POST data/new', () => {
       });
   });
 
-  after(() => { 
-    //Delete temp device and temp data
+  after(() => {
+    // Delete temp device and temp data
     Data.deleteOne({ deviceId: tempMac });
-    Device.deleteOne({ deviceId: tempMac }); 
-    });
+    Device.deleteOne({ deviceId: tempMac });
+  });
 });

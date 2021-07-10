@@ -15,8 +15,8 @@ describe('/GET data/getData', () => {
   const tempName = faker.internet.userName();
   const tempTemperature = faker.datatype.number();
   const tempLocation = {
-    type: "Point",
-    coordinates: [Number(faker.address.latitude()), Number(faker.address.longitude())]
+    type: 'Point',
+    coordinates: [Number(faker.address.latitude()), Number(faker.address.longitude())],
   };
   const { uuid, apiKey } = uuidApiKey.create();
 
@@ -29,10 +29,10 @@ describe('/GET data/getData', () => {
       apiKey,
     }).save();
     new Data({
-        apiKey: apiKey,
-        deviceId: tempMac,
-        temperature: tempTemperature,
-        location: tempLocation
+      apiKey,
+      deviceId: tempMac,
+      temperature: tempTemperature,
+      location: tempLocation,
     }).save();
   });
 
@@ -48,9 +48,9 @@ describe('/GET data/getData', () => {
       });
   });
 
-  after(() => { 
-    //Delete temp device and temp data
+  after(() => {
+    // Delete temp device and temp data
     Data.deleteOne({ deviceId: tempMac });
-    Device.deleteOne({ deviceId: tempMac }); 
-    });
+    Device.deleteOne({ deviceId: tempMac });
+  });
 });
