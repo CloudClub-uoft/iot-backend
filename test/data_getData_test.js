@@ -10,13 +10,13 @@ const Data = require('../models/data');
 const { expect } = chai;
 chai.use(chaiHttp);
 
-describe('/GET device/getData', () => {
+describe('/GET data/getData', () => {
   const tempMac = faker.internet.mac();
   const tempName = faker.internet.userName();
   const tempTemperature = faker.datatype.number();
   const tempLocation = {
-    type: "Point",
-    coordinates: [faker.address.latitude(), faker.address.longitude()]
+    type: 'Point',
+    coordinates: [Number(faker.address.latitude()), Number(faker.address.longitude())],
   };
   const { uuid, apiKey } = uuidApiKey.create();
 
@@ -29,27 +29,28 @@ describe('/GET device/getData', () => {
       apiKey,
     }).save();
     new Data({
-        apiKey: apiKey,
-        deviceId: tempMac,
-        temperature: tempTemperature,
-        location: tempLocation
+      apiKey,
+      deviceId: tempMac,
+      temperature: tempTemperature,
+      location: tempLocation,
     }).save();
   });
 
   it('it should GET the data', (done) => {
     chai.request(app)
-      .get(`/device/getData?mac=${tempMac.replace(/:/g, '')}&points=1`)
+      .get(`/data/getData?mac=${tempMac.replace(/:/g, '')}&points=1`)
       .end((_, res) => {
         expect(res.statusCode).to.equal(200);
-        expect(res.Data.location).to.equal(tempLocation);
-        expect(res.Data.temperature).to.equal(tempTemperature);
+        const parseData = JSON.parse(JSON.stringify(res.body.doc));
+        expect(parseData[0].location.coordinates).to.deep.equal(tempLocation.coordinates);
+        expect(Number(parseData[0].temperature)).to.equal(Number(tempTemperature));
+        done();
       });
-    done();
   });
 
-  after(() => { 
-    //Delete temp device and temp data
+  after(() => {
+    // Delete temp device and temp data
     Data.deleteOne({ deviceId: tempMac });
-    Device.deleteOne({ deviceId: tempMac }); 
-    });
+    Device.deleteOne({ deviceId: tempMac });
+  });
 });
