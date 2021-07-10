@@ -41,7 +41,7 @@ describe('/GET data/getData', () => {
       .get(`/data/getData?mac=${tempMac.replace(/:/g, '')}&points=1`)
       .end((_, res) => {
         expect(res.statusCode).to.equal(200);
-        parseData = JSON.parse(JSON.stringify(res.body.Data));
+        const parseData = JSON.parse(JSON.stringify(res.body.doc));
         expect(parseData[0].location.coordinates).to.deep.equal(tempLocation.coordinates);
         expect(Number(parseData[0].temperature)).to.equal(Number(tempTemperature));
         done();
