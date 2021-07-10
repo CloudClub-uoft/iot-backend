@@ -9,7 +9,7 @@ module.exports = (app) => {
     Data.find({ deviceId: mac }).sort({ timestamp: -1 }).limit(points).exec((err, doc) => {
       if (err) return res.status(400).json({ error: 'Bad Request' });
       if (doc == null) return res.status(404).json({ error: 'Not found.' });
-      return res.status(200).json({ Data });
+      return res.status(200).json({ doc });
     });
   });
 };
