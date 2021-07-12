@@ -60,7 +60,7 @@ module.exports = (app) => {
       if (fieldName === 'deviceId') {
         // uses regex to replace all colons and periods with dashs
         // since mac addresses have several valid formats
-        deviceId = value.replace(/:|\./g, '-');
+        deviceId = value.replace(/:|\./g, '');
       } else {
         return res.status(400).json({ error: 'Only provide the device mac address under fieldname "deviceId"' });
       }
@@ -92,8 +92,6 @@ module.exports = (app) => {
         next(err);
         return res.status(500).json({ error: 'An unexpected error occured' });
       }
-
     });
   });
 };
-
