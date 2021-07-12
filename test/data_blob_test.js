@@ -19,7 +19,7 @@ const fakeMac = 'test_'.concat(faker.internet.mac());
 
 // this defines the file that will be uploaded to simulate a real POST request
 const checkFile = './README.md';
-const deviceId = fakeMac.replace(/:|\./g, '-');
+const deviceId = fakeMac.replace(/:|\./g, '');
 
 describe('/POST data/blob', () => {
   // removes the fake entry from the s3 bucket after the test
