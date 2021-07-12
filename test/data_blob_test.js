@@ -75,10 +75,10 @@ describe('/POST data/blob', () => {
           expect(doc.location).to.equal(res.body.Location);
           expect(doc.key).to.equal(res.body.key);
           expect(doc.bucket).to.equal(res.body.Bucket);
+        }).then(() => {
+          expect(res.statusCode).to.equal(201);
+          done();
         });
-
-        expect(res.statusCode).to.equal(201);
-        done();
       });
   });
 });
