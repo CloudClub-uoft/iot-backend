@@ -9,7 +9,7 @@ const { expect } = chai;
 chai.use(chaiHttp);
 
 describe('/POST device/register', () => {
-  const tempMac = faker.internet.mac();
+  const tempMac = faker.internet.mac().replace(/:/g, '');
   it('it should POST the information', (done) => {
     chai.request(app)
       .post('/device/register')
