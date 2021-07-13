@@ -10,7 +10,7 @@ const { expect } = chai;
 chai.use(chaiHttp);
 
 describe('/GET device/info', () => {
-  const tempMac = faker.internet.mac();
+  const tempMac = faker.internet.mac().replace(/:/g, '');
   const tempName = faker.internet.userName();
   const { uuid, apiKey } = uuidApiKey.create();
 
@@ -26,7 +26,7 @@ describe('/GET device/info', () => {
 
   it('it should GET the device information', (done) => {
     chai.request(app)
-      .get(`/device/info?mac=${tempMac.replace(/:/g, '')}`)
+      .get(`/device/info?mac=${tempMac}`)
       .end((_, res) => {
         expect(res.statusCode).to.equal(200);
         expect(res.body.friendlyName).to.equal(tempName);
