@@ -5,6 +5,7 @@ const database = mysql.createPool({
   user: process.env.DB_USER,
   password: process.env.DB_PASS,
   port: process.env.DB_PORT,
+  database: 'cloudclub',
   connectionLimit: 50,
   charset: 'utf8mb4',
 });

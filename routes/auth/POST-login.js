@@ -9,7 +9,7 @@ module.exports = (app) => {
     if (email === undefined || password === undefined) {
       return res.status(400).json({ error: 'Missing fields, check our API docs at cloudclub.ca/api' });
     }
-    db.query(`SELECT * FROM cloudclub.logins WHERE email='${email}'`, (err1, result1) => {
+    db.query(`SELECT * FROM logins WHERE email='${email}'`, (err1, result1) => {
       if (err1) return res.status(500).json({ error: 'Internal Server Error 500' });
       if (result1.length === 1) {
         bcrypt.compare(password, result1[0].password, (err2, result2) => {
