@@ -4,7 +4,7 @@ module.exports = (app) => {
   app.get('/device/info', (req, res) => {
     if (!req.query.mac) return res.status(400).json({ error: 'No MAC address provided.' });
     // Take MAC address with no symbols as query parameter and reformat with colons
-    const mac = req.query.mac.replace(/(..)/g, '$1:').slice(0, -1);
+    const mac = req.query.mac.toLowerCase();
     Device.findOne({ deviceId: mac }, 'friendlyName', (err, foundDevice) => {
       if (err) return res.status(400).json({ error: 'Bad Request' });
       if (foundDevice == null) return res.status(404).json({ error: 'No device found.' });
