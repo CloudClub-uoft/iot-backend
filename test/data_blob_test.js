@@ -4,7 +4,7 @@ const faker = require('faker');
 const path = require('path');
 const md5 = require('md5');
 const fs = require('fs');
-const AWS = require('aws-sdk');
+const s3Client = require('../util/s3'); // configure s3 client
 const BlobLog = require('../models/blobLog');
 
 const app = require('../app');
@@ -21,33 +21,8 @@ const fakeMac = 'test_'.concat(faker.internet.mac());
 const checkFile = './README.md';
 const deviceId = fakeMac.replace(/:|\./g, '');
 
-describe('/POST data/blob', () => {
-  // removes the fake entry from the s3 bucket after the test
-  after((done) => {
-    // create new client
-    const s3Client = new AWS.S3({
-      credentials: {
-        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-        secretAccessKey: process.env.AWS_SECRET_KEY,
-      },
-    });
-
-    // delete the object
-    s3Client.deleteObject(
-      {
-        Bucket: process.env.BUCKET_NAME,
-        Key: deviceId.concat('_', path.basename(checkFile)),
-      },
-      (err) => {
-        if (err) {
-          console.error(err);
-        }
-        // terminate this test once the s3 deletion callback and mongo callback is done
-        BlobLog.deleteOne({ key: deviceId.concat('_', path.basename(checkFile)) }).then(() => done());
-      },
-    );
-  });
-
+describe('/POST data/blob', function () {
+  this.timeout(10000);
   it('it should POST the blob', (done) => {
     // The checkfile MUST be under 5mb, otherwise it will be split into parts while
     // uploading. s3 returns a combined md5 for each part, which will result in a md5
@@ -80,5 +55,25 @@ describe('/POST data/blob', () => {
           done();
         });
       });
+  });
+
+  // removes the fake entry from the s3 bucket after the test
+  after((done) => {
+    // create new client
+
+    // delete the object
+    s3Client.deleteObject(
+      {
+        Bucket: process.env.BUCKET_NAME,
+        Key: deviceId.concat('_', path.basename(checkFile)),
+      },
+      (err) => {
+        if (err) {
+          console.error(err);
+        }
+        // terminate this test once the s3 deletion callback and mongo callback is done
+        BlobLog.deleteOne({ key: deviceId.concat('_', path.basename(checkFile)) }).then(() => done());
+      },
+    );
   });
 });

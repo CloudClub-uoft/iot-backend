@@ -1,6 +1,7 @@
 require('./util/env').configure(); // configure the environment variables
 require('./util/mongodb'); // configure mongoose db connection
 require('./util/aedes'); // configure MQTT broker
+require('./util/s3'); // configure s3 client
 const express = require('express');
 
 // Express config
