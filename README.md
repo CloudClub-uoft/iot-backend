@@ -1,2 +1,2 @@
-# iot-device-backend
-Device hardware and software for the CloudClub IoT project.
+# iot-backend
+Webapp backend and device communications for CloudClub's IoT project.

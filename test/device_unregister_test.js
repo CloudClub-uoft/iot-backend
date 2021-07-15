@@ -9,7 +9,7 @@ const { expect } = chai;
 chai.use(chaiHttp);
 
 describe('/POST device/unregister', () => {
-  const tempMac = faker.internet.mac();
+  const tempMac = faker.internet.mac().replace(/:/g, '');
 
   before((done) => {
     // Register temporary device

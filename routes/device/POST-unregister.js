@@ -6,7 +6,7 @@ module.exports = (app) => {
     // INPUT: deviceid (mac address)
     // Deletes the device associated with this deviceid (mac address)
     // OUTPUT: Success/failure
-    const { deviceId } = req.body;
+    const deviceId = req.body.deviceId.toLowerCase();
 
     Device.findOneAndDelete({ deviceId }, (err, foundDevice) => {
       if (err) return res.status(400).json({ error: 'Bad Request' });
