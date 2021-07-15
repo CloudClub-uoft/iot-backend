@@ -19,6 +19,7 @@ jobs:
 
     env:
       URI_MONGO: ${{ secrets.TEST_URI_MONGO }}
+      JWT_KEY: 'test'
     steps:
     - uses: actions/checkout@v2
     - name: Use Node.js ${{ matrix.node-version }}
