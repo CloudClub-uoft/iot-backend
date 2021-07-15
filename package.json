@@ -18,6 +18,7 @@
   "homepage": "https://github.com/CloudClub-uoft/iot-device#readme",
   "dependencies": {
     "aedes": "^0.46.0",
+    "archiver": "^5.3.0",
     "aws-sdk": "^2.936.0",
     "bcrypt": "^5.0.1",
     "cookie-parser": "^1.4.5",

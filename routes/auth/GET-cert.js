@@ -1,11 +1,14 @@
 const jwt = require('jsonwebtoken');
 const forge = require('node-forge');
 const fs = require('fs');
+const Archiver = require('archiver');
 
 module.exports = (app) => {
   app.get('/auth/cert', (req, res) => {
     const { token } = req.cookies || {};
     if (!token) return res.status(401).json({ error: 'Not logged in.' });
+
+    const { download } = req.query || {};
 
     let payload;
     try {
@@ -59,6 +62,15 @@ module.exports = (app) => {
       certificate: forge.pki.certificateToPem(clientCert),
     };
 
-    return res.status(200).json(pem);
+    if (download) {
+      res.attachment('auth.zip');
+
+      const archive = Archiver('zip');
+      archive.pipe(res);
+      archive
+        .append(pem.privateKey, { name: 'clientKey.key' })
+        .append(pem.certificate, { name: 'clientCert.crt' })
+        .finalize();
+    } else return res.status(200).json(pem);
   });
 };
