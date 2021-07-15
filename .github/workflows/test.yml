@@ -19,6 +19,9 @@ jobs:
 
     env:
       URI_MONGO: ${{ secrets.TEST_URI_MONGO }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
+      BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
     steps:
     - uses: actions/checkout@v2
       with:
