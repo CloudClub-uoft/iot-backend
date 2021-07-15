@@ -10,12 +10,12 @@ const fs = require('fs');
 const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(cors({ origin: `${(process.env.NODE_ENV === 'production') ? 'https' : 'http'}://localhost:${process.env.WEBAPP_PORT || 3000}` }));
 
 // Dynamic route loading
 require('./util/router').boot(app);
 
 if (process.env.NODE_ENV === 'production') {
-  app.use(cors({ origin: `https://localhost:${process.env.WEBAPP_PORT}` }));
   const options = {
     key: fs.readFileSync(process.env.HTTPS_SERVER_KEY_PATH),
     cert: fs.readFileSync(process.env.HTTPS_SERVER_CERT_PATH),
@@ -33,7 +33,6 @@ if (process.env.NODE_ENV === 'production') {
     res.end();
   }).listen(process.env.HTTP_PORT || 80);
 } else {
-  app.use(cors({ origin: `http://localhost:${process.env.WEBAPP_PORT}` }));
   server.createServer(app).listen(process.env.HTTP_PORT || 80,
     function listen() {
       console.log(`HTTP server started and listening on port ${this.address().port}`);
