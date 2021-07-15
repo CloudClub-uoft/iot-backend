@@ -21,9 +21,15 @@ jobs:
       URI_MONGO: ${{ secrets.TEST_URI_MONGO }}
     steps:
     - uses: actions/checkout@v2
+      with:
+        persist-credentials: false
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v2
       with:
         node-version: ${{ matrix.node-version }}
+    - name: Reconfigure git to use HTTP authentication
+        run: >
+          git config --global url."https://github.com/".insteadOf
+          ssh://git@github.com/
     - run: npm ci
     - run: npm test
