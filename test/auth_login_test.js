@@ -4,6 +4,8 @@ const faker = require('faker');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
+process.env.DB_NAME = 'test';
+
 const app = require('../app');
 const db = require('../util/mysql');
 
