@@ -19,6 +19,7 @@ describe('/POST auth/login', () => {
   const last = faker.name.lastName();
 
   before((done) => {
+    process.env.JWT_KEY = 'test';
     bcrypt.hash(password, 5, (_, hash) => {
       db.query(`INSERT INTO logins (\`first-name\`, \`last-name\`, email, password) VALUES ('${first}', '${last}', '${email}', '${hash}')`, done);
     });

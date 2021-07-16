@@ -11,6 +11,7 @@ const { expect } = chai;
 chai.use(chaiHttp);
 
 describe('/GET auth/cert', () => {
+  process.env.JWT_KEY = 'test';
   const email = faker.internet.email();
   const token = jwt.sign({ email }, process.env.JWT_KEY, {
     algorithm: 'HS256',
