@@ -6,16 +6,35 @@ name: Node.js CI
 on:
   pull_request:
     branches: [ staging ]
+  workflow_dispatch:
+
+env:
+  URI_MONGO: ${{ secrets.TEST_URI_MONGO }}
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
+  BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
 
 jobs:
-  build:
-
+  node-v14-test:
     runs-on: ubuntu-latest
+    container: node:14-alpine
 
-    strategy:
-      matrix:
-        node-version: [14.x, 16.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        persist-credentials: false
+    - name: Install git
+      run: apk add --no-cache git
+    - name: Configure HTTP clone  
+      run: git config --global url."https://github.com/".insteadOf ssh://git@github.com/
+    - name: Install dependencies
+      run: npm ci
+    - name: Run test
+      run: npm test
+
+  node-v16-test:
+    runs-on: ubuntu-latest
+    container: node:16-alpine
 
     env:
       URI_MONGO: ${{ secrets.TEST_URI_MONGO }}
@@ -25,11 +44,12 @@ jobs:
       DB_PORT: ${{ secrets.TEST_DB_PORT }}
       DB_NAME: 'test'
       JWT_KEY: 'test'
+
     steps:
     - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v2
       with:
-        node-version: ${{ matrix.node-version }}
-    - run: npm ci
-    - run: npm test
+        persist-credentials: false
+    - name: Install dependencies
+      run: npm ci
+    - name: Run test
+      run: npm test

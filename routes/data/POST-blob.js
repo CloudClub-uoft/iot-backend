@@ -1,18 +1,10 @@
 const formidable = require('formidable');
 const { PassThrough } = require('stream');
-const AWS = require('aws-sdk');
+const s3Client = require('../../util/s3'); // configure s3 client
 const BlobLog = require('../../models/blobLog');
 
 module.exports = (app) => {
   app.post('/data/blob', (req, res, next) => {
-    const s3Client = new AWS.S3({
-      credentials: {
-        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-        secretAccessKey: process.env.AWS_SECRET_KEY,
-      },
-      computeChecksums: true,
-    });
-
     const uploadStream = (file) => {
       const pass = new PassThrough();
       s3Client.upload(
@@ -34,11 +26,11 @@ module.exports = (app) => {
             location: objectInfo.Location,
             key: objectInfo.key,
             bucket: objectInfo.Bucket,
-          }).save();
-
-          // once this callback is called, return status 201 with the
-          // URI under the location field in objectInfo
-          return res.status(201).json(objectInfo);
+          }).save().then(() => {
+            // once this callback is called, return status 201 with the
+           // URI under the location field in objectInfo
+            return res.status(201).json(objectInfo);
+          });
         },
       );
       return pass;

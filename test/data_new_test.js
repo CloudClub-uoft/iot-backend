@@ -20,14 +20,14 @@ describe('/POST data/new', () => {
   };
   const { uuid, apiKey } = uuidApiKey.create();
 
-  before(() => {
+  before((done) => {
     // Register a temp device
     new Device({
       deviceId: tempMac,
       friendlyName: tempName,
       uuid,
       apiKey,
-    }).save();
+    }).save().then(() => done());
   });
 
   it('it should POST the data', (done) => {
@@ -41,14 +41,14 @@ describe('/POST data/new', () => {
         Data.findOne({ deviceId: tempMac }, (__, doc) => {
           expect(Number(doc.temperature)).to.equal(Number(tempTemperature));
           expect(doc.location.coordinates).to.deep.equal(tempLocation.coordinates);
-          done();
-        });
+        }).then(() => done());
       });
   });
 
-  after(() => {
+  after((done) => {
     // Delete temp device and temp data
-    Data.deleteOne({ deviceId: tempMac });
-    Device.deleteOne({ deviceId: tempMac });
+    Data.deleteOne({ deviceId: tempMac }).then(() => {
+      Device.deleteOne({ deviceId: tempMac }).then(() => done());
+    });
   });
 });
