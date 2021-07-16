@@ -17,8 +17,8 @@ module.exports = (app) => {
       friendlyName,
       uuid,
       apiKey,
-    }).save();
-
-    return res.status(200).json({ apiKey });
+    }).save().then(() => {
+      return res.status(200).json({ apiKey });
+    });
   });
 };
