@@ -6,7 +6,7 @@ name: Node.js CI
 on:
   pull_request:
     branches: [ staging ]
-  workflow-dispatch:
+  workflow_dispatch:
 
 env:
   URI_MONGO: ${{ secrets.TEST_URI_MONGO }}
