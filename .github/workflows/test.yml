@@ -36,6 +36,15 @@ jobs:
     runs-on: ubuntu-latest
     container: node:16-alpine
 
+    env:
+      URI_MONGO: ${{ secrets.TEST_URI_MONGO }}
+      DB_HOST: ${{ secrets.TEST_DB_HOST }}
+      DB_USER: ${{ secrets.TEST_DB_USER }}
+      DB_PASS: ${{ secrets.TEST_DB_PASS }}
+      DB_PORT: ${{ secrets.TEST_DB_PORT }}
+      DB_NAME: 'test'
+      JWT_KEY: 'test'
+
     steps:
     - uses: actions/checkout@v2
       with:

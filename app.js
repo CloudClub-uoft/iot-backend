@@ -3,11 +3,13 @@ require('./util/mongodb'); // configure mongoose db connection
 require('./util/aedes'); // configure MQTT broker
 require('./util/s3'); // configure s3 client
 const express = require('express');
+const cookieParser = require('cookie-parser');
 
 // Express config
 const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(cookieParser());
 
 // Dynamic route loading
 require('./util/router').boot(app);
