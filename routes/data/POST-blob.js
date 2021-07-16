@@ -26,11 +26,11 @@ module.exports = (app) => {
             location: objectInfo.Location,
             key: objectInfo.key,
             bucket: objectInfo.Bucket,
-          }).save();
-
-          // once this callback is called, return status 201 with the
-          // URI under the location field in objectInfo
-          return res.status(201).json(objectInfo);
+          }).save().then(() => {
+            // once this callback is called, return status 201 with the
+           // URI under the location field in objectInfo
+            return res.status(201).json(objectInfo);
+          });
         },
       );
       return pass;
