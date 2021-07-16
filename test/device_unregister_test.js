@@ -28,9 +28,8 @@ describe('/POST device/unregister', () => {
       .end((_, res) => {
         expect(res.statusCode).to.equal(200);
         Device.findOne({ deviceId: tempMac }, (__, count) => {
-          expect(count).to.equal(0);
-        });
-        done();
+          expect(count).to.be.null;
+        }).then(() => done());
       });
   });
 });
