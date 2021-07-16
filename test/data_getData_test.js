@@ -7,7 +7,7 @@ const app = require('../app');
 const Device = require('../models/device');
 const Data = require('../models/data');
 
-const { expect } = chai;
+const {expect} = chai;
 chai.use(chaiHttp);
 
 describe('/GET data/getData', function () {
@@ -56,4 +56,5 @@ describe('/GET data/getData', function () {
       Device.deleteOne({ deviceId: tempMac }).then(() => done());
     });
   });
+
 });
