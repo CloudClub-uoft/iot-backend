@@ -23,8 +23,9 @@ jobs:
     - uses: actions/checkout@v2
       with:
         persist-credentials: false
-    - name: Install & Test
+    - name: Install dependencies
       run: npm ci
+    - name: Run test
       run: npm test
 
   node-v16-test:
@@ -35,6 +36,7 @@ jobs:
     - uses: actions/checkout@v2
       with:
         persist-credentials: false
-    - name: Install & Test
+    - name: Install dependencies
       run: npm ci
+    - name: Run test
       run: npm test
