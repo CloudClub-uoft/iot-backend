@@ -42,6 +42,7 @@ describe('/GET data/getData', () => {
       .end((_, res) => {
         expect(res.statusCode).to.equal(200);
         const parseData = JSON.parse(JSON.stringify(res.body.doc));
+        console.log(parseData);
         expect(parseData[0].location.coordinates).to.deep.equal(tempLocation.coordinates);
         expect(Number(parseData[0].temperature)).to.equal(Number(tempTemperature));
         done();
