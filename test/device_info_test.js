@@ -30,8 +30,8 @@ describe('/GET device/info', () => {
       .end((_, res) => {
         expect(res.statusCode).to.equal(200);
         expect(res.body.friendlyName).to.equal(tempName);
+        done();
       });
-    done();
   });
 
   after((done) => { Device.deleteOne({ deviceId: tempMac }).then(() => done()); });
