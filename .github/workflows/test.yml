@@ -24,7 +24,7 @@ jobs:
       with:
         persist-credentials: false
     - name: Install git
-      run: RUN apk add --no-cache git
+      run: apk add --no-cache git
     - name: Configure HTTP clone  
       run: git config --global url."https://github.com/".insteadOf ssh://git@github.com/
     - name: Install dependencies
