@@ -10,7 +10,8 @@ const Data = require('../models/data');
 const { expect } = chai;
 chai.use(chaiHttp);
 
-describe('/GET data/getData', () => {
+describe('/GET data/getData', function () {
+  this.timeout(5000);
   const tempMac = faker.internet.mac();
   const tempName = faker.internet.userName();
   const tempTemperature = faker.datatype.number();
@@ -20,20 +21,21 @@ describe('/GET data/getData', () => {
   };
   const { uuid, apiKey } = uuidApiKey.create();
 
-  before(() => {
+  before((done) => {
     // Register a temp device and Post temporary data
     new Device({
       deviceId: tempMac,
       friendlyName: tempName,
       uuid,
       apiKey,
-    }).save();
-    new Data({
-      apiKey,
-      deviceId: tempMac,
-      temperature: tempTemperature,
-      location: tempLocation,
-    }).save();
+    }).save().then(() => {
+      new Data({
+        apiKey,
+        deviceId: tempMac,
+        temperature: tempTemperature,
+        location: tempLocation,
+      }).save().then(() => done());
+    });
   });
 
   it('it should GET the data', (done) => {
@@ -48,9 +50,10 @@ describe('/GET data/getData', () => {
       });
   });
 
-  after(() => {
+  after((done) => {
     // Delete temp device and temp data
-    Data.deleteOne({ deviceId: tempMac });
-    Device.deleteOne({ deviceId: tempMac });
+    Data.deleteOne({ deviceId: tempMac }).then(() => {
+      Device.deleteOne({ deviceId: tempMac }).then(() => done());
+    });
   });
 });
