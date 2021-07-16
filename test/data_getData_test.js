@@ -37,8 +37,15 @@ describe('/GET data/getData', () => {
   });
 
   it('it should GET the data', (done) => {
+
+    //remove MAC Address colons
+    const changedMac = tempMac.replace(/:/g, '');
+
+    //Create New URL
+    const requestURL = `/data/getData?mac=${changedMac}&points=1`;
+
     chai.request(app)
-      .get(`/data/getData?mac=${tempMac.replace(/:/g, '')}&points=1`)
+      .get(requestURL)
       .end((_, res) => {
         expect(res.statusCode).to.equal(200);
         const parseData = JSON.parse(JSON.stringify(res.body.doc));
