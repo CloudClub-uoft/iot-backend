@@ -24,8 +24,8 @@ jobs:
       with:
         persist-credentials: false
     - name: Install & Test
-    - run: npm ci
-    - run: npm test
+      run: npm ci
+      run: npm test
 
   node-v16-test:
     runs-on: ubuntu-latest
@@ -36,5 +36,5 @@ jobs:
       with:
         persist-credentials: false
     - name: Install & Test
-    - run: npm ci
-    - run: npm test
+      run: npm ci
+      run: npm test
