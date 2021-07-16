@@ -44,12 +44,13 @@ describe('/GET data/getData', () => {
     //Create New URL
     const requestURL = `/data/getData?mac=${changedMac}&points=1`;
 
+    console.log(requestURL);
+
     chai.request(app)
       .get(requestURL)
       .end((_, res) => {
         expect(res.statusCode).to.equal(200);
         const parseData = JSON.parse(JSON.stringify(res.body.doc));
-        console.log(parseData);
         expect(parseData[0].location.coordinates).to.deep.equal(tempLocation.coordinates);
         expect(Number(parseData[0].temperature)).to.equal(Number(tempTemperature));
         done();
