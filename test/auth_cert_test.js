@@ -53,8 +53,8 @@ describe('/GET auth/cert', () => {
         forge.pki.privateKeyFromPem(res.body.privateKey);
         const cert = forge.pki.certificateFromPem(res.body.certificate);
         expect(caCert.verify(cert)).to.equal(true);
+        done();
       });
-    done();
   });
 
   after(() => {
