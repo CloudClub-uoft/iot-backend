@@ -1,5 +1,5 @@
 const aedes = require('aedes')();
-const server = (process.env.PRODUCTION) ? require('tls') : require('net');
+const server = (process.env.NODE_ENV === 'production') ? require('tls') : require('net');
 const mqtt = require('mqtt');
 const fs = require('fs');
 
@@ -11,7 +11,7 @@ function eventHandler(client) {
   });
 }
 
-if (process.env.PRODUCTION) {
+if (process.env.NODE_ENV === 'production') {
   const options = {
     key: fs.readFileSync(process.env.MQTT_SERVER_KEY_PATH),
     cert: fs.readFileSync(process.env.MQTT_SERVER_CERT_PATH),
