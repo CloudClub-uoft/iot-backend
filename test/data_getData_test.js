@@ -1,17 +1,24 @@
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const faker = require('faker');
+const jwt = require('jsonwebtoken');
 const uuidApiKey = require('uuid-apikey');
 
 const app = require('../app');
 const Device = require('../models/device');
 const Data = require('../models/data');
 
-const {expect} = chai;
+const { expect } = chai;
 chai.use(chaiHttp);
 
-describe('/GET data/getData', function () {
+describe('/GET data/getData', function test() {
   this.timeout(5000);
+  const email = faker.internet.email();
+  const token = jwt.sign({ email }, process.env.JWT_KEY, {
+    algorithm: 'HS256',
+    expiresIn: 60,
+  });
+
   const tempMac = faker.internet.mac();
   const tempName = faker.internet.userName();
   const tempTemperature = faker.datatype.number();
@@ -41,6 +48,7 @@ describe('/GET data/getData', function () {
   it('it should GET the data', (done) => {
     chai.request(app)
       .get(`/data/getData?mac=${tempMac.replace(/:/g, '')}&points=1`)
+      .set('Cookie', `token=${token}`)
       .end((_, res) => {
         expect(res.statusCode).to.equal(200);
         const parseData = JSON.parse(JSON.stringify(res.body.doc));
@@ -56,5 +64,4 @@ describe('/GET data/getData', function () {
       Device.deleteOne({ deviceId: tempMac }).then(() => done());
     });
   });
-
 });

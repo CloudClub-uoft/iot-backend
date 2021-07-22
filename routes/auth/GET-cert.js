@@ -6,8 +6,6 @@ const Archiver = require('archiver');
 module.exports = (app) => {
   app.get('/auth/cert', (req, res) => {
     const { token } = req.cookies || {};
-    if (!token) return res.status(401).json({ error: 'Not logged in.' });
-
     const { download } = req.query || {};
 
     let payload;
