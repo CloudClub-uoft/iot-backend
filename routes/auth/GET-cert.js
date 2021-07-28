@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
-const forge = require('node-forge');
-const fs = require('fs');
 const Archiver = require('archiver');
+
+const genCert = require('../../util/genCert');
 
 module.exports = (app) => {
   app.get('/auth/cert', (req, res) => {
@@ -18,49 +18,7 @@ module.exports = (app) => {
       return res.status(400).json({ Error: 'Bad Request 400' });
     }
 
-    const caCert = forge.pki.certificateFromPem(fs.readFileSync(process.env.MQTT_SERVER_CA_PATH));
-    const caKey = forge.pki.privateKeyFromPem(fs.readFileSync(process.env.MQTT_SERVER_KEY_PATH));
-
-    const clientKeys = forge.pki.rsa.generateKeyPair(4096);
-    const clientCert = forge.pki.createCertificate();
-    clientCert.publicKey = clientKeys.publicKey;
-    clientCert.serialNumber = '01';
-    clientCert.validity.notBefore = new Date();
-    clientCert.validity.notAfter = new Date();
-    clientCert.validity.notAfter.setDate(clientCert.validity.notBefore.getDate() + 365);
-
-    const attributes = [{
-      name: 'commonName',
-      value: 'IoT Device',
-    }, {
-      name: 'countryName',
-      value: 'CA',
-    }, {
-      name: 'localityName',
-      value: 'Toronto',
-    }, {
-      name: 'stateOrProvinceName',
-      value: 'ON',
-    }, {
-      name: 'organizationName',
-      value: 'CloudClub',
-    }, {
-      name: 'organizationalUnitName',
-      value: 'IoT-Project',
-    }, {
-      name: 'emailAddress',
-      value: payload.email,
-    }];
-
-    clientCert.setSubject(attributes);
-    clientCert.setIssuer(caCert.subject.attributes);
-
-    clientCert.sign(caKey, forge.md.sha256.create());
-
-    const pem = {
-      privateKey: forge.pki.privateKeyToPem(clientKeys.privateKey),
-      certificate: forge.pki.certificateToPem(clientCert),
-    };
+    const pem = genCert(payload.email, 'pem');
 
     if (download) {
       res.attachment('auth.zip');
