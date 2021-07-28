@@ -32,7 +32,7 @@ describe('/POST data/blob', function () {
     }
 
     chai.request(app)
-      .post('/data/blob')
+      .post('/api/data/blob')
       .field('deviceId', fakeMac)
       .attach('testfile', checkFile)
       .end((_, res) => {

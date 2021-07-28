@@ -32,7 +32,7 @@ describe('/POST data/new', () => {
 
   it('it should POST the data', (done) => {
     chai.request(app)
-      .post('/data/new')
+      .post('/api/data/new')
       .send({
         apiKey, deviceId: tempMac, temperature: tempTemperature, location: tempLocation,
       })
