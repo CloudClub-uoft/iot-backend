@@ -40,7 +40,7 @@ module.exports = (app) => {
       value: 'IoT-Project',
     }, {
       name: 'emailAddress',
-      value: req.jwtPayload.email,
+      value: res.locals.jwtPayload.email,
     }];
 
     clientCert.setSubject(attributes);
