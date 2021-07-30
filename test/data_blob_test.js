@@ -4,6 +4,7 @@ const faker = require('faker');
 const path = require('path');
 const md5 = require('md5');
 const fs = require('fs');
+const jwt = require('jsonwebtoken');
 const s3Client = require('../util/s3'); // configure s3 client
 const BlobLog = require('../models/blobLog');
 
@@ -31,8 +32,15 @@ describe('/POST data/blob', function () {
       expect.fail('Cannot use files over 5mb in blob unit test');
     }
 
+    const email = faker.internet.email();
+    const token = jwt.sign({ email }, process.env.JWT_KEY, {
+      algorithm: 'HS256',
+      expiresIn: 60,
+    });
+
     chai.request(app)
-      .post('/api/data/blob')
+      .post('/data/blob')
+      .set('Cookie', `token=${token}`)
       .field('deviceId', fakeMac)
       .attach('testfile', checkFile)
       .end((_, res) => {
