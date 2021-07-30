@@ -1,8 +1,8 @@
 const bcrypt = require('bcrypt');
 
-const db = require('./mysql');
+const db = require('../util/mysql');
 
-module.exports = (req, res, callback) => {
+module.exports = (req, res, next) => {
   const { email, password } = req.body;
   if (email === undefined || password === undefined) {
     return res.status(400).json({ error: 'Missing fields, check our API docs at cloudclub.ca/api' });
@@ -12,7 +12,10 @@ module.exports = (req, res, callback) => {
     if (result1.length === 1) {
       bcrypt.compare(password, result1[0].password, (err2, result2) => {
         if (err2) return res.status(500).json({ error: 'Internal Server Error 500' });
-        if (result2) callback(email);
+        if (result2) {
+          res.locals.email = email;
+          next();
+        }
         if (!res.headersSent) res.status(401).json({ error: 'Password incorrect.' });
       });
     } else if (result1.length === 0) {

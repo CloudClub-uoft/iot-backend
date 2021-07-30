@@ -1,11 +1,8 @@
+const jwtVerify = require('../../middleware/jwtVerify');
 const Device = require('../../models/device');
 
 module.exports = (app) => {
-  app.post('/device/unregister', (req, res) => {
-    // TODO
-    // INPUT: deviceid (mac address)
-    // Deletes the device associated with this deviceid (mac address)
-    // OUTPUT: Success/failure
+  app.post('/device/unregister', jwtVerify, (req, res) => {
     const deviceId = req.body.deviceId.toLowerCase();
 
     Device.findOneAndDelete({ deviceId }, (err, foundDevice) => {

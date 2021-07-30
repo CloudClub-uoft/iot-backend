@@ -11,9 +11,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser());
 
-app.use('/api/data', require('./middleware/jwtVerify'));
-app.use('/auth/cert', require('./middleware/jwtVerify'));
-
 // Dynamic route loading
 require('./util/router').boot(app);
 

@@ -22,7 +22,7 @@ const fakeMac = 'test_'.concat(faker.internet.mac());
 const checkFile = './README.md';
 const deviceId = fakeMac.replace(/:|\./g, '');
 
-describe('/POST data/blob', function () {
+describe('/POST api/data/blob', function () {
   this.timeout(10000);
   it('it should POST the blob', (done) => {
     // The checkfile MUST be under 5mb, otherwise it will be split into parts while
@@ -39,7 +39,7 @@ describe('/POST data/blob', function () {
     });
 
     chai.request(app)
-      .post('/data/blob')
+      .post('/api/data/blob')
       .set('Cookie', `token=${token}`)
       .field('deviceId', fakeMac)
       .attach('testfile', checkFile)

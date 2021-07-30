@@ -11,7 +11,7 @@ const Data = require('../models/data');
 const { expect } = chai;
 chai.use(chaiHttp);
 
-describe('/POST data/new', () => {
+describe('/POST api/data/new', () => {
   const tempMac = faker.internet.mac();
   const tempName = faker.internet.userName();
   const tempTemperature = faker.datatype.number();
@@ -39,7 +39,7 @@ describe('/POST data/new', () => {
 
   it('it should POST the data', (done) => {
     chai.request(app)
-      .post('/data/new')
+      .post('/api/data/new')
       .set('Cookie', `token=${token}`)
 
       .send({

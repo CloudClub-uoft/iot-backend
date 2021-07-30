@@ -10,7 +10,7 @@ const app = require('../app');
 const { expect } = chai;
 chai.use(chaiHttp);
 
-describe('/GET auth/cert', () => {
+describe('/GET api/auth/cert', () => {
   const caCert = forge.pki.certificateFromPem(fs.readFileSync(process.env.MQTT_SERVER_CA_PATH));
   const email = faker.internet.email();
   const token = jwt.sign({ email }, process.env.JWT_KEY, {
@@ -20,7 +20,7 @@ describe('/GET auth/cert', () => {
 
   it('it should authenticate the user and return a client certificate and key', (done) => {
     chai.request(app)
-      .get('/auth/cert')
+      .get('/api/auth/cert')
       .set('Cookie', `token=${token}`)
       .end((_, res) => {
         expect(res).to.have.status(200);
