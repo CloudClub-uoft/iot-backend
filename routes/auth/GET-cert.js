@@ -1,20 +1,14 @@
-const jwt = require('jsonwebtoken');
+
 const forge = require('node-forge');
 const fs = require('fs');
 const Archiver = require('archiver');
+
+const genCert = require('../../util/genCert');
 
 module.exports = (app) => {
   app.get('/auth/cert', (req, res) => {
     const { token } = req.cookies || {};
     const { download } = req.query || {};
-
-    let payload;
-    try {
-      payload = jwt.verify(token, process.env.JWT_KEY);
-    } catch (error) {
-      if (error instanceof jwt.JsonWebTokenError) return res.status(401).json({ Error: 'Unauthorized 401' });
-      return res.status(400).json({ Error: 'Bad Request 400' });
-    }
 
     const caCert = forge.pki.certificateFromPem(fs.readFileSync(process.env.MQTT_SERVER_CA_PATH));
     const caKey = forge.pki.privateKeyFromPem(fs.readFileSync(process.env.MQTT_SERVER_KEY_PATH));
@@ -47,7 +41,7 @@ module.exports = (app) => {
       value: 'IoT-Project',
     }, {
       name: 'emailAddress',
-      value: payload.email,
+      value: res.locals.jwtPayload.email,
     }];
 
     clientCert.setSubject(attributes);
@@ -59,6 +53,7 @@ module.exports = (app) => {
       privateKey: forge.pki.privateKeyToPem(clientKeys.privateKey),
       certificate: forge.pki.certificateToPem(clientCert),
     };
+
 
     if (download) {
       res.attachment('auth.zip');

@@ -1,4 +1,5 @@
 const chai = require('chai');
+const jwt = require('jsonwebtoken');
 const chaiHttp = require('chai-http');
 const faker = require('faker');
 const uuidApiKey = require('uuid-apikey');
@@ -19,8 +20,14 @@ describe('/POST data/new', () => {
     coordinates: [Number(faker.address.latitude()), Number(faker.address.longitude())],
   };
   const { uuid, apiKey } = uuidApiKey.create();
-
+  let token = '';
   before((done) => {
+    const email = faker.internet.email();
+    token = jwt.sign({ email }, process.env.JWT_KEY, {
+      algorithm: 'HS256',
+      expiresIn: 60,
+    });
+
     // Register a temp device
     new Device({
       deviceId: tempMac,
@@ -33,6 +40,8 @@ describe('/POST data/new', () => {
   it('it should POST the data', (done) => {
     chai.request(app)
       .post('/data/new')
+      .set('Cookie', `token=${token}`)
+
       .send({
         apiKey, deviceId: tempMac, temperature: tempTemperature, location: tempLocation,
       })
