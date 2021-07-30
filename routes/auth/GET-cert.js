@@ -1,6 +1,9 @@
+
 const forge = require('node-forge');
 const fs = require('fs');
 const Archiver = require('archiver');
+
+const genCert = require('../../util/genCert');
 
 module.exports = (app) => {
   app.get('/auth/cert', (req, res) => {
@@ -52,6 +55,7 @@ module.exports = (app) => {
       privateKey: forge.pki.privateKeyToPem(clientKeys.privateKey),
       certificate: forge.pki.certificateToPem(clientCert),
     };
+
 
     if (download) {
       res.attachment('auth.zip');
