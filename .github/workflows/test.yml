@@ -37,6 +37,8 @@ jobs:
       run: npm ci
     - name: Run test
       run: npm test
+    - name: Run ESLint
+      run: npm run eslint
 
   node-v16-test:
     runs-on: ubuntu-latest
@@ -50,3 +52,5 @@ jobs:
       run: npm ci
     - name: Run test
       run: npm test
+    - name: Run ESLint
+      run: npm run eslint
