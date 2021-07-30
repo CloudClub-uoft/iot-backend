@@ -1,8 +1,8 @@
-const jwtVerify = require('../../middleware/jwtVerify');
-const Data = require('../../models/data');
+const jwtVerify = require('../../../middleware/jwtVerify');
+const Data = require('../../../models/data');
 
 module.exports = (app) => {
-  app.get('/data/getData', jwtVerify, (req, res) => {
+  app.get('/device/data/getData', jwtVerify, (req, res) => {
     if (!req.query.mac) return res.status(400).json({ error: 'No MAC address provided.' });
     if (!req.query.points) return res.status(400).json({ error: 'Please specify number of data points.' });
     const mac = req.query.mac.replace(/(..)/g, '$1:').slice(0, -1);

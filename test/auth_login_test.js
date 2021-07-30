@@ -12,7 +12,7 @@ const db = require('../util/mysql');
 const { expect } = chai;
 chai.use(chaiHttp);
 
-describe('/POST auth/login', () => {
+describe('/POST api/auth/login', () => {
   const email = faker.internet.email();
   const password = faker.internet.password();
   const first = faker.name.firstName();
@@ -27,7 +27,7 @@ describe('/POST auth/login', () => {
 
   it('it should return a valid auth cookie', (done) => {
     chai.request(app)
-      .post('/auth/login')
+      .post('/api/auth/login')
       .send({ email, password })
       .end((err, res) => {
         expect(res).to.have.status(200);

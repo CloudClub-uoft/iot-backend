@@ -11,7 +11,7 @@ const Data = require('../models/data');
 const { expect } = chai;
 chai.use(chaiHttp);
 
-describe('/GET data/getData', function test() {
+describe('/GET device/data/getData', function test() {
   this.timeout(5000);
   const email = faker.internet.email();
   const token = jwt.sign({ email }, process.env.JWT_KEY, {
@@ -47,7 +47,7 @@ describe('/GET data/getData', function test() {
 
   it('it should GET the data', (done) => {
     chai.request(app)
-      .get(`/data/getData?mac=${tempMac.replace(/:/g, '')}&points=1`)
+      .get(`/device/data/getData?mac=${tempMac.replace(/:/g, '')}&points=1`)
       .set('Cookie', `token=${token}`)
       .end((_, res) => {
         expect(res.statusCode).to.equal(200);

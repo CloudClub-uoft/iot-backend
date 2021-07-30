@@ -1,12 +1,12 @@
 const formidable = require('formidable');
 const { PassThrough } = require('stream');
 
-const jwtVerify = require('../../middleware/jwtVerify');
-const s3Client = require('../../util/s3'); // configure s3 client
-const BlobLog = require('../../models/blobLog');
+const jwtVerify = require('../../../middleware/jwtVerify');
+const s3Client = require('../../../util/s3'); // configure s3 client
+const BlobLog = require('../../../models/blobLog');
 
 module.exports = (app) => {
-  app.post('api/data/blob', jwtVerify, (req, res, next) => {
+  app.post('/api/data/blob', jwtVerify, (req, res, next) => {
     const uploadStream = (file) => {
       const pass = new PassThrough();
       s3Client.upload(

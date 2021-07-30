@@ -1,6 +1,6 @@
-const jwtVerify = require('../../middleware/jwtVerify');
-const Data = require('../../models/data');
-const Device = require('../../models/device');
+const jwtVerify = require('../../../middleware/jwtVerify');
+const Data = require('../../../models/data');
+const Device = require('../../../models/device');
 
 module.exports = (app) => {
   app.post('/api/data/new', jwtVerify, (req, res) => {
