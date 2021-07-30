@@ -1,11 +1,9 @@
-const login = require('../../util/login');
+const login = require('../../middleware/login');
 const genCert = require('../../util/genCert');
 
 module.exports = (app) => {
-  app.post('/device/cert', (req, res) => {
-    login(req, res, (email) => {
-      const der = genCert(email, 'der');
-      return res.status(200).json(der);
-    });
+  app.post('/device/cert', login, (req, res) => {
+    const der = genCert(res.locals?.email, 'der');
+    return res.status(200).json(der);
   });
 };
