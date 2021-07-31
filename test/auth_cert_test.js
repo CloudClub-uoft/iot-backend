@@ -11,14 +11,13 @@ const { expect } = chai;
 chai.use(chaiHttp);
 
 describe('/GET api/auth/cert', () => {
-  const caCert = forge.pki.certificateFromPem(fs.readFileSync(process.env.MQTT_SERVER_CA_PATH));
-  const email = faker.internet.email();
-  const token = jwt.sign({ email }, process.env.JWT_KEY, {
-    algorithm: 'HS256',
-    expiresIn: 60,
-  });
-
   it('it should authenticate the user and return a client certificate and key', (done) => {
+    const caCert = forge.pki.certificateFromPem(fs.readFileSync(process.env.MQTT_SERVER_CA_PATH));
+    const email = faker.internet.email();
+    const token = jwt.sign({ email }, process.env.JWT_KEY, {
+      algorithm: 'HS256',
+      expiresIn: 60,
+    });
     chai.request(app)
       .get('/api/auth/cert')
       .set('Cookie', `token=${token}`)

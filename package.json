@@ -4,7 +4,7 @@
   "description": "Device hardware and software for the CloudClub IoT project.",
   "main": "app.js",
   "scripts": {
-    "test": "mocha --exit"
+    "test": "mocha --require 'test/setup.js' --exit"
   },
   "repository": {
     "type": "git",

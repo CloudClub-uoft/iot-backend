@@ -12,19 +12,19 @@ const { expect } = chai;
 chai.use(chaiHttp);
 
 describe('/POST device/cert', () => {
-  const caCert = forge.pki.certificateFromPem(fs.readFileSync(process.env.MQTT_SERVER_CA_PATH));
   const email = faker.internet.email();
   const password = faker.internet.password();
-  const first = faker.name.firstName();
-  const last = faker.name.lastName();
 
   before((done) => {
+    const first = faker.name.firstName();
+    const last = faker.name.lastName();
     bcrypt.hash(password, 5, (_, hash) => {
       db.query(`INSERT INTO logins (\`first-name\`, \`last-name\`, email, password) VALUES ('${first}', '${last}', '${email}', '${hash}')`, done);
     });
   });
 
   it('it should authenticate the device and return a client certificate and key', (done) => {
+    const caCert = forge.pki.certificateFromPem(fs.readFileSync(process.env.MQTT_SERVER_CA_PATH));
     chai.request(app)
       .post('/device/cert')
       .send({ email, password })
