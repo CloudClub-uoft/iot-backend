@@ -12,12 +12,15 @@ env:
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
   AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
   BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
+
   URI_MONGO: mongodb://mongodb:27017
+
   DB_HOST: mysql
-  DB_USER: user
+  DB_USER: root
   DB_PASS: password
-  DB_PORT: 3306
   DB_NAME: test
+  DB_PORT: 3306
+
   JWT_KEY: test
 
 jobs:
@@ -34,8 +37,6 @@ jobs:
       mysql:
         image: mysql
         env:
-          MYSQL_USER: user
-          MYSQL_PASSWORD: password
           MYSQL_ROOT_PASSWORD: password
           MYSQL_DATABASE: test
         ports:
@@ -60,6 +61,21 @@ jobs:
   node-v16-test:
     runs-on: ubuntu-latest
     container: node:16-alpine
+
+    services:
+      mongodb:
+        image: mongo
+        ports:
+          - 27017:27017
+        options: --health-cmd="mongo" --health-interval=5s --health-timeout=2s --health-retries=3
+      mysql:
+        image: mysql
+        env:
+          MYSQL_ROOT_PASSWORD: password
+          MYSQL_DATABASE: test
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=5s --health-timeout=2s --health-retries=3
 
     steps:
     - uses: actions/checkout@v2
