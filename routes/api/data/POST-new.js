@@ -1,8 +1,9 @@
-const Data = require('../../models/data');
-const Device = require('../../models/device');
+const jwtVerify = require('../../../middleware/jwtVerify');
+const Data = require('../../../models/data');
+const Device = require('../../../models/device');
 
 module.exports = (app) => {
-  app.post('/data/new', (req, res) => {
+  app.post('/api/data/new', jwtVerify, (req, res) => {
     const {
       apiKey, deviceId, temperature, location,
     } = req.body;

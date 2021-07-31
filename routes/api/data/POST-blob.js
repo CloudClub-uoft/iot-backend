@@ -1,10 +1,12 @@
 const formidable = require('formidable');
 const { PassThrough } = require('stream');
-const s3Client = require('../../util/s3'); // configure s3 client
-const BlobLog = require('../../models/blobLog');
+
+const jwtVerify = require('../../../middleware/jwtVerify');
+const s3Client = require('../../../util/s3'); // configure s3 client
+const BlobLog = require('../../../models/blobLog');
 
 module.exports = (app) => {
-  app.post('/data/blob', (req, res, next) => {
+  app.post('/api/data/blob', jwtVerify, (req, res, next) => {
     const uploadStream = (file) => {
       const pass = new PassThrough();
       s3Client.upload(
@@ -26,11 +28,9 @@ module.exports = (app) => {
             location: objectInfo.Location,
             key: objectInfo.key,
             bucket: objectInfo.Bucket,
-          }).save().then(() => {
-            // once this callback is called, return status 201 with the
-           // URI under the location field in objectInfo
-            return res.status(201).json(objectInfo);
-          });
+          }).save().then(() => res.status(201).json(objectInfo));
+          // once this callback is called, return status 201 with the
+          // URI under the location field in objectInfo
         },
       );
       return pass;

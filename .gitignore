@@ -9,6 +9,12 @@
 # production
 /build
 
+# tls
+*.crt
+*.key
+*.pem
+*.der
+
 # misc
 .DS_Store
 .env
