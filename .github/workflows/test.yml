@@ -12,7 +12,7 @@ env:
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
   AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
   BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
-  URI_MONGO: 'mongodb://user:password@mongodb:27017/test'
+  URI_MONGO: 'mongodb://user:password@mongodb:27017'
   DB_HOST: 'localhost'
   DB_USER: 'user'
   DB_PASS: 'password'
@@ -31,7 +31,6 @@ jobs:
         env:
           MONGO_INITDB_ROOT_USERNAME: 'user'
           MONGO_INITDB_ROOT_PASSWORD: 'password'
-          MONGO_INITDB_DATABASE: 'test'
         ports:
           - 27017:27017
         options: --health-cmd="mongo" --health-interval=10s --health-timeout=5s --health-retries=5
