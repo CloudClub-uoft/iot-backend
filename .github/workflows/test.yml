@@ -46,7 +46,7 @@ jobs:
     steps:
     - name: Setup MySQL
       run: |
-        apt install -y mysql-client
+        apk install -y mysql-client
         mysql --host mysql -u root -p password -e 'CREATE TABLE logins (id INT NOT NULL AUTO_INCREMENT, `first-name` TEXT NOT NULL, `last-name` TEXT NOT NULL, email TEXT NOT NULL, password TEXT NOT NULL);'
     - uses: actions/checkout@v2
       with:
@@ -82,6 +82,10 @@ jobs:
         options: --health-cmd="mysqladmin ping" --health-interval=5s --health-timeout=2s --health-retries=3
 
     steps:
+    - name: Setup MySQL
+      run: |
+        apk install -y mysql-client
+        mysql --host mysql -u root -p password -e 'CREATE TABLE logins (id INT NOT NULL AUTO_INCREMENT, `first-name` TEXT NOT NULL, `last-name` TEXT NOT NULL, email TEXT NOT NULL, password TEXT NOT NULL);'
     - uses: actions/checkout@v2
       with:
         persist-credentials: false
