@@ -48,7 +48,6 @@ jobs:
       run: |
         apk update
         apk add mysql-client
-        mysql --host mysql -u root -p password -e 'CREATE TABLE logins (id INT NOT NULL AUTO_INCREMENT, `first-name` TEXT NOT NULL, `last-name` TEXT NOT NULL, email TEXT NOT NULL, password TEXT NOT NULL);'
     - uses: actions/checkout@v2
       with:
         persist-credentials: false
