@@ -17,7 +17,7 @@ env:
 
   DB_HOST: mysql
   DB_USER: root
-  DB_PASS: password
+  DB_PASS:
   DB_NAME: test
   DB_PORT: 3306
 
@@ -37,7 +37,7 @@ jobs:
       mysql:
         image: mysql:5.7
         env:
-          MYSQL_ROOT_PASSWORD: password
+          MYSQL_ALLOW_EMPTY_PASSWORD: true
           MYSQL_DATABASE: test
         ports:
           - 3306:3306
@@ -48,7 +48,7 @@ jobs:
       run: |
         apk update
         apk add mysql mysql-client
-        mysql -h mysql -u root -p password -e 'CREATE TABLE test.logins (id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, `first-name` TEXT NOT NULL, `last-name` TEXT NOT NULL,  email TEXT NOT NULL, password TEXT NOT NULL);'
+        mysql -h 'mysql' -e 'CREATE TABLE test.logins (id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, `first-name` TEXT NOT NULL, `last-name` TEXT NOT NULL,  email TEXT NOT NULL, password TEXT NOT NULL);'
     - uses: actions/checkout@v2
       with:
         persist-credentials: false
@@ -87,7 +87,7 @@ jobs:
       run: |
         apk update
         apk add mysql mysql-client
-        mysql -h mysql -u root -p password -e 'CREATE TABLE test.logins (id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, `first-name` TEXT NOT NULL, `last-name` TEXT NOT NULL,  email TEXT NOT NULL, password TEXT NOT NULL);'
+        mysql -h 'mysql' -e 'CREATE TABLE test.logins (id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, `first-name` TEXT NOT NULL, `last-name` TEXT NOT NULL,  email TEXT NOT NULL, password TEXT NOT NULL);'
     - uses: actions/checkout@v2
       with:
         persist-credentials: false
