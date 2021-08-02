@@ -23,9 +23,8 @@ describe('/POST device/register', () => {
       .post('/device/register')
       .set('Cookie', `token=${token}`)
       .send({ deviceId: tempMac, friendlyName })
-      .end((_, res) => {
-        Device.findOne({ apiKey: res.body.apiKey }, (__, doc) => {
-          expect(doc.apiKey).to.equal(res.body.apiKey);
+      .end(() => {
+        Device.findOne({ deviceId: tempMac }, (__, doc) => {
           expect(doc.deviceId).to.equal(tempMac);
           expect(doc.friendlyName).to.equal(friendlyName);
         }).then(() => done());
