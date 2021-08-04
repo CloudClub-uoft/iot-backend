@@ -22,7 +22,7 @@ const fakeMac = 'test_'.concat(faker.internet.mac());
 const checkFile = './README.md';
 const deviceId = fakeMac.replace(/:|\./g, '');
 
-describe('/POST api/data/blob', function () {
+describe('/POST api/data/blob', function test() {
   this.timeout(10000);
   it('it should POST the blob', (done) => {
     // The checkfile MUST be under 5mb, otherwise it will be split into parts while

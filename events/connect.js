@@ -1,7 +1,7 @@
 module.exports = {
   name: 'connect',
 
-  execute(connack, client) {
+  execute(_, __) {
     console.log('MQTT client connected');
   },
 };

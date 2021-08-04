@@ -15,4 +15,12 @@ module.exports = {
     'consistent-return': 'off',
     'no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
   },
+  overrides: [
+    {
+      files: ['*_test.js', '*_spec.js'],
+      rules: {
+        'no-unused-expressions': 'off',
+      },
+    },
+  ],
 };
