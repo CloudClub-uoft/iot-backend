@@ -1,7 +1,6 @@
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const faker = require('faker');
-const uuidApiKey = require('uuid-apikey');
 
 const app = require('../app');
 const Device = require('../models/device');
@@ -12,15 +11,12 @@ chai.use(chaiHttp);
 describe('/GET device/info', () => {
   const tempMac = faker.internet.mac().replace(/:/g, '');
   const tempName = faker.internet.userName();
-  const { uuid, apiKey } = uuidApiKey.create();
 
   before((done) => {
     // Register a temp device
     new Device({
       deviceId: tempMac,
       friendlyName: tempName,
-      uuid,
-      apiKey,
     }).save().then(() => done());
   });
 

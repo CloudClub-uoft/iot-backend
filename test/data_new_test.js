@@ -2,7 +2,6 @@ const chai = require('chai');
 const jwt = require('jsonwebtoken');
 const chaiHttp = require('chai-http');
 const faker = require('faker');
-const uuidApiKey = require('uuid-apikey');
 
 const app = require('../app');
 const Device = require('../models/device');
@@ -19,7 +18,7 @@ describe('/POST api/data/new', () => {
     type: 'Point',
     coordinates: [Number(faker.address.latitude()), Number(faker.address.longitude())],
   };
-  const { uuid, apiKey } = uuidApiKey.create();
+
   let token = '';
   before((done) => {
     const email = faker.internet.email();
@@ -32,8 +31,6 @@ describe('/POST api/data/new', () => {
     new Device({
       deviceId: tempMac,
       friendlyName: tempName,
-      uuid,
-      apiKey,
     }).save().then(() => done());
   });
 
@@ -43,7 +40,7 @@ describe('/POST api/data/new', () => {
       .set('Cookie', `token=${token}`)
 
       .send({
-        apiKey, deviceId: tempMac, temperature: tempTemperature, location: tempLocation,
+        deviceId: tempMac, temperature: tempTemperature, location: tempLocation,
       })
       .end((_, res) => {
         expect(res.statusCode).to.equal(201);
