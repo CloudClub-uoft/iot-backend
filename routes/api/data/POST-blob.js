@@ -63,7 +63,8 @@ module.exports = (app) => {
       }
 
       // update the filename to include the device mac address for searching
-      file.originalFilename = deviceId.concat('_', file.originalFilename);
+      const newFile = file;
+      newFile.originalFilename = deviceId.concat('_', file.originalFilename);
     }).on('error', (err) => {
       // catches the error emmitted when the upload exceeds the max size
       if (err.httpCode === 413) {
