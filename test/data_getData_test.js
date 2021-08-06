@@ -2,7 +2,6 @@ const chai = require('chai');
 const chaiHttp = require('chai-http');
 const faker = require('faker');
 const jwt = require('jsonwebtoken');
-const uuidApiKey = require('uuid-apikey');
 
 const app = require('../app');
 const Device = require('../models/device');
@@ -26,18 +25,14 @@ describe('/GET device/data/getData', function test() {
     type: 'Point',
     coordinates: [Number(faker.address.latitude()), Number(faker.address.longitude())],
   };
-  const { uuid, apiKey } = uuidApiKey.create();
 
   before((done) => {
     // Register a temp device and Post temporary data
     new Device({
       deviceId: tempMac,
       friendlyName: tempName,
-      uuid,
-      apiKey,
     }).save().then(() => {
       new Data({
-        apiKey,
         deviceId: tempMac,
         temperature: tempTemperature,
         location: tempLocation,

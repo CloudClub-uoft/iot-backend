@@ -9,14 +9,6 @@ const deviceSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  uuid: {
-    type: String,
-    required: true,
-  },
-  apiKey: {
-    type: String,
-    required: true,
-  },
   dateAdded: {
     type: Date,
     default: Date.now,
