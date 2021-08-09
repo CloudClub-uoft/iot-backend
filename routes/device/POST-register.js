@@ -1,8 +1,8 @@
 const jwtVerify = require('../../middleware/jwtVerify');
 const Device = require('../../models/device');
 
-module.exports = (app) => {
-  app.post('/device/register', jwtVerify, (req, res) => {
+module.exports = (deviceApp) => {
+  deviceApp.post('/device/register', jwtVerify, (req, res) => {
     const { deviceId, friendlyName } = req.body;
     if (!deviceId || !deviceId.match(/([0-9A-Fa-f]{2}){6}/) || !friendlyName) return res.status(400).json({ error: 'Bad Request' });
 

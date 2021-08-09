@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const chaiHttp = require('chai-http');
 const faker = require('faker');
 
-const app = require('../app');
+const apps = require('../app');
 const Device = require('../models/device');
 const Data = require('../models/data');
 
@@ -35,7 +35,7 @@ describe('/POST api/data/new', () => {
   });
 
   it('it should POST the data', (done) => {
-    chai.request(app)
+    chai.request(apps.webApp)
       .post('/api/data/new')
       .set('Cookie', `token=${token}`)
 
