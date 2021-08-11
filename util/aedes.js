@@ -13,9 +13,9 @@ function eventHandler(client) {
 
 if (process.env.PRODUCTION) {
   const options = {
-    key: fs.readFileSync(process.env.MQTT_SERVER_KEY_PATH),
-    cert: fs.readFileSync(process.env.MQTT_SERVER_CERT_PATH),
-    ca: fs.readFileSync(process.env.MQTT_SERVER_CA_PATH),
+    key: fs.readFileSync(process.env.DEVICE_SERVER_KEY_PATH),
+    cert: fs.readFileSync(process.env.DEVICE_SERVER_CERT_PATH),
+    ca: fs.readFileSync(process.env.DEVICE_SERVER_CA_PATH),
     requestCert: true,
   };
 
