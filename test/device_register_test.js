@@ -11,9 +11,13 @@ chai.use(chaiHttp);
 
 describe('/POST device/register', () => {
   const email = faker.internet.email();
-  const token = jwt.sign({ email }, process.env.JWT_KEY, {
-    algorithm: 'HS256',
-    expiresIn: 60,
+  let token;
+
+  before(() => {
+    token = jwt.sign({ email }, process.env.JWT_KEY, {
+      algorithm: 'HS256',
+      expiresIn: 60,
+    });
   });
 
   const tempMac = faker.internet.mac().replace(/:/g, '');

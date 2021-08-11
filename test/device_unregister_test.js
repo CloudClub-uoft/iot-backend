@@ -11,14 +11,14 @@ chai.use(chaiHttp);
 
 describe('/POST device/unregister', () => {
   const email = faker.internet.email();
-  const token = jwt.sign({ email }, process.env.JWT_KEY, {
-    algorithm: 'HS256',
-    expiresIn: 60,
-  });
-
   const tempMac = faker.internet.mac().replace(/:/g, '');
+  let token;
 
   before((done) => {
+    token = jwt.sign({ email }, process.env.JWT_KEY, {
+      algorithm: 'HS256',
+      expiresIn: 60,
+    });
     // Register temporary device
     new Device({
       deviceId: tempMac,
