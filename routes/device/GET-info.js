@@ -1,7 +1,7 @@
 const Device = require('../../models/device');
 
-module.exports = (deviceApp) => {
-  deviceApp.get('/device/info', (req, res) => {
+module.exports = (app) => {
+  app.get('/device/info', (req, res) => {
     if (!req.query.mac) return res.status(400).json({ error: 'No MAC address provided.' });
     // Take MAC address with no symbols as query parameter and reformat with colons
     const mac = req.query.mac.toLowerCase();

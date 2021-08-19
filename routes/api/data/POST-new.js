@@ -2,8 +2,8 @@ const jwtVerify = require('../../../middleware/jwtVerify');
 const Data = require('../../../models/data');
 const Device = require('../../../models/device');
 
-module.exports = (webApp) => {
-  webApp.post('/api/data/new', jwtVerify, (req, res) => {
+module.exports = (app) => {
+  app.post('/api/data/new', jwtVerify, (req, res) => {
     const {
       deviceId, temperature, location,
     } = req.body;

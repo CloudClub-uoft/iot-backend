@@ -2,7 +2,7 @@ const chai = require('chai');
 const chaiHttp = require('chai-http');
 const faker = require('faker');
 
-const apps = require('../app');
+const { deviceApp } = require('../app');
 const Device = require('../models/device');
 
 const { expect } = chai;
@@ -21,7 +21,7 @@ describe('/GET device/info', () => {
   });
 
   it('it should GET the device information', (done) => {
-    chai.request(apps.deviceApp)
+    chai.request(deviceApp)
       .get(`/device/info?mac=${tempMac}`)
       .end((_, res) => {
         expect(res.statusCode).to.equal(200);

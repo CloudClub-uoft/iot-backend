@@ -8,7 +8,7 @@ const jwt = require('jsonwebtoken');
 const s3Client = require('../util/s3'); // configure s3 client
 const BlobLog = require('../models/blobLog');
 
-const apps = require('../app');
+const { webApp } = require('../app');
 
 const { expect } = chai;
 chai.use(chaiHttp);
@@ -38,7 +38,7 @@ describe('/POST api/data/blob', function test() {
       expiresIn: 60,
     });
 
-    chai.request(apps.webApp)
+    chai.request(webApp)
       .post('/api/data/blob')
       .set('Cookie', `token=${token}`)
       .field('deviceId', fakeMac)

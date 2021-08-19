@@ -3,7 +3,7 @@ const chaiHttp = require('chai-http');
 const faker = require('faker');
 const jwt = require('jsonwebtoken');
 
-const apps = require('../app');
+const { deviceApp } = require('../app');
 const Device = require('../models/device');
 
 const { expect } = chai;

@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken');
 
 process.env.DB_NAME = 'test';
 
-const apps = require('../app');
+const { webApp } = require('../app');
 const db = require('../util/mysql');
 
 const { expect } = chai;
@@ -26,7 +26,7 @@ describe('/POST api/auth/login', () => {
   });
 
   it('it should return a valid auth cookie', (done) => {
-    chai.request(apps.webApp)
+    chai.request(webApp)
       .post('/api/auth/login')
       .send({ email, password })
       .end((err, res) => {

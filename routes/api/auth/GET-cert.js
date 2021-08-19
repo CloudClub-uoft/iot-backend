@@ -3,8 +3,8 @@ const Archiver = require('archiver');
 const jwtVerify = require('../../../middleware/jwtVerify');
 const genCert = require('../../../util/genCert');
 
-module.exports = (webApp) => {
-  webApp.get('/api/auth/cert', jwtVerify, (req, res) => {
+module.exports = (app) => {
+  app.get('/api/auth/cert', jwtVerify, (req, res) => {
     const { download } = req.query || {};
     const pem = genCert(res.locals?.jwtPayload);
 
