@@ -27,7 +27,7 @@ describe('/POST device/unregister', () => {
   });
 
   it('it should use POST to remove the information', (done) => {
-    chai.request(apps.deviceApp)
+    chai.request(deviceApp)
       .post('/device/unregister')
       .set('Cookie', `token=${token}`)
       .send({ deviceId: tempMac })
