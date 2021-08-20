@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 const forge = require('node-forge');
 const fs = require('fs');
 
-const app = require('../app');
+const { webApp } = require('../app');
 
 const { expect } = chai;
 chai.use(chaiHttp);
@@ -18,7 +18,7 @@ describe('/GET api/auth/cert', () => {
       algorithm: 'HS256',
       expiresIn: 60,
     });
-    chai.request(app)
+    chai.request(webApp)
       .get('/api/auth/cert')
       .set('Cookie', `token=${token}`)
       .end((_, res) => {

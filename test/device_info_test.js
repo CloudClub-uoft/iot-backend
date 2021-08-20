@@ -3,7 +3,7 @@ const chaiHttp = require('chai-http');
 const faker = require('faker');
 const jwt = require('jsonwebtoken');
 
-const app = require('../app');
+const { deviceApp } = require('../app');
 const Device = require('../models/device');
 
 const { expect } = chai;
@@ -27,7 +27,7 @@ describe('/GET device/info', () => {
   });
 
   it('it should GET the device information', (done) => {
-    chai.request(app)
+    chai.request(deviceApp)
       .get(`/device/info?mac=${tempMac}`)
       .set('Cookie', `token=${token}`)
       .end((_, res) => {

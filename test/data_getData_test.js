@@ -3,7 +3,7 @@ const chaiHttp = require('chai-http');
 const faker = require('faker');
 const jwt = require('jsonwebtoken');
 
-const app = require('../app');
+const { deviceApp } = require('../app');
 const Device = require('../models/device');
 const Data = require('../models/data');
 
@@ -13,11 +13,6 @@ chai.use(chaiHttp);
 describe('/GET device/data/getData', function test() {
   this.timeout(5000);
   const email = faker.internet.email();
-  const token = jwt.sign({ email }, process.env.JWT_KEY, {
-    algorithm: 'HS256',
-    expiresIn: 60,
-  });
-
   const tempMac = faker.internet.mac();
   const tempName = faker.internet.userName();
   const tempTemperature = faker.datatype.number();
@@ -25,8 +20,13 @@ describe('/GET device/data/getData', function test() {
     type: 'Point',
     coordinates: [Number(faker.address.latitude()), Number(faker.address.longitude())],
   };
+  let token;
 
   before((done) => {
+    token = jwt.sign({ email }, process.env.JWT_KEY, {
+      algorithm: 'HS256',
+      expiresIn: 60,
+    });
     // Register a temp device and Post temporary data
     new Device({
       deviceId: tempMac,
@@ -41,7 +41,7 @@ describe('/GET device/data/getData', function test() {
   });
 
   it('it should GET the data', (done) => {
-    chai.request(app)
+    chai.request(deviceApp)
       .get(`/device/data/getData?mac=${tempMac.replace(/:/g, '')}&points=1`)
       .set('Cookie', `token=${token}`)
       .end((_, res) => {

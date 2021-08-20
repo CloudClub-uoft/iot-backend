@@ -3,12 +3,12 @@ const path = require('path');
 
 const routePath = path.resolve('./routes');
 
-exports.boot = (app) => {
+exports.boot = (app, appDir) => {
   (function traverse(dir) {
     fs.readdirSync(dir).forEach((file) => {
       const dirPath = path.join(dir, file);
       const isDirectory = fs.lstatSync(dirPath).isDirectory();
-      if (isDirectory) traverse(dirPath);
+      if (isDirectory && dirPath.includes(`routes\\${appDir}`)) traverse(dirPath);
       if (!isDirectory) {
         // routes/filename, slicing off '.js'
         const cleanPath = `${dir}/${file.substr(0, file.indexOf('.'))}`;
