@@ -9,6 +9,10 @@ const deviceSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  userEmail: {
+    type: String,
+    required: true,
+  },
   dateAdded: {
     type: Date,
     default: Date.now,
