@@ -23,6 +23,7 @@ describe('/POST device/unregister', () => {
     new Device({
       deviceId: tempMac,
       friendlyName: 'friendlyName',
+      userEmail: email,
     }).save().then(() => done());
   });
 

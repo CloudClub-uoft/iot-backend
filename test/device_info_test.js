@@ -23,6 +23,7 @@ describe('/GET device/info', () => {
     new Device({
       deviceId: tempMac,
       friendlyName: tempName,
+      userEmail: email,
     }).save().then(() => done());
   });
 
