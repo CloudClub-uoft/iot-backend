@@ -5,6 +5,7 @@ require('./util/mongodb'); // configure mongoose db connection
 require('./util/aedes'); // configure MQTT broker
 require('./util/s3'); // configure s3 client
 const https = (process.env.PRODUCTION) ? require('https') : {};
+const proxy = require('http-proxy').createProxyServer();
 const fs = require('fs');
 const express = require('express');
 const cookieParser = require('cookie-parser');
@@ -19,6 +20,10 @@ const webApp = express();
 webApp.use(express.urlencoded({ extended: true }));
 webApp.use(express.json());
 webApp.use(cookieParser());
+webApp.all('/device/*', (req, res) => {
+  proxy.web(req, res, { target: `${req.protocol}://localhost:${process.env.PORT || 3000}` });
+});
+
 if (process.env.PRODUCTION) {
   const deviceAppOptions = {
     key: fs.readFileSync(process.env.WEB_SERVER_KEY_PATH),
@@ -46,7 +51,7 @@ if (process.env.PRODUCTION) {
     console.log(`Device HTTP server started and listening on port ${this.address().port}`);
   });
   require('./util/router').boot(webApp, 'api');
-  webApp.listen(process.env.PORT || 3001, function listen() {
+  webApp.listen(process.env.WEBPORT || 3001, function listen() {
     console.log(`Webapp HTTP server started and listening on port ${this.address().port}`);
   });
 }
