@@ -4,6 +4,7 @@ const db = require('../util/mysql');
 
 module.exports = (req, res, next) => {
   const { email, password } = req.body;
+  console.log(req.body);
   if (email === undefined || password === undefined) {
     return res.status(400).json({ error: 'Missing fields, check our API docs at cloudclub.ca/api' });
   }

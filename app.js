@@ -7,6 +7,8 @@ require('./util/s3'); // configure s3 client
 const https = (process.env.PRODUCTION) ? require('https') : {};
 const fs = require('fs');
 const express = require('express');
+const cors = require('cors');
+
 const cookieParser = require('cookie-parser');
 
 // Express config
@@ -14,9 +16,9 @@ const deviceApp = express();
 deviceApp.use(express.urlencoded({ extended: true }));
 deviceApp.use(express.json());
 deviceApp.use(cookieParser());
-
 const webApp = express();
 webApp.use(express.urlencoded({ extended: true }));
+webApp.use(cors());
 webApp.use(express.json());
 webApp.use(cookieParser());
 if (process.env.PRODUCTION) {
@@ -46,7 +48,7 @@ if (process.env.PRODUCTION) {
     console.log(`Device HTTP server started and listening on port ${this.address().port}`);
   });
   require('./util/router').boot(webApp, 'api');
-  webApp.listen(process.env.PORT || 3001, function listen() {
+  webApp.listen(process.env.PORT2 || 3001, function listen() {
     console.log(`Webapp HTTP server started and listening on port ${this.address().port}`);
   });
 }
