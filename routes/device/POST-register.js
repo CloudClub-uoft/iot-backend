@@ -1,4 +1,3 @@
-const e = require('express');
 const jwtVerify = require('../../middleware/jwtVerify');
 const Device = require('../../models/device');
 
