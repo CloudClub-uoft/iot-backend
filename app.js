@@ -2,13 +2,15 @@
 /* eslint-disable max-len */
 require('./util/env').configure(); // configure the environment variables
 require('./util/mongodb'); // configure mongoose db connection
-require('./util/aedes'); // configure MQTT broker
+//require('./util/aedes'); // configure MQTT broker
 require('./util/s3'); // configure s3 client
 const https = (process.env.PRODUCTION) ? require('https') : {};
 const fs = require('fs');
 const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
+
+const morgan = require("morgan");
 
 // Express config
 const deviceApp = express();
@@ -20,14 +22,30 @@ const webApp = express();
 webApp.use(express.urlencoded({ extended: true }));
 webApp.use(express.json());
 webApp.use(cookieParser());
+
+morgan.token('body', (req, res) => JSON.stringify(req.body));
+
+morgan.token('cookies', function(req,res){
+  return JSON.stringify(req.cookies)  
+ })
+
+morgan.token('headers', function(req,res){
+  return JSON.stringify(req.headers["origin"])  
+ })
+
+webApp.use(morgan(' :headers :cookies'))
 const corsOptions = () => {
   const protocol = (process.env.PRODUCTION) ? 'https' : 'http';
   return {
-    origin: `${protocol}://localhost:${process.env.WEBAPPPORT}`,
+    origin: `http://localhost:8080`,
     credentials: true,
   };
 };
-webApp.use(cors(corsOptions));
+webApp.use(cors({
+  origin: "http://localhost:3001",
+  credentials: true,
+}));
+
 
 if (process.env.PRODUCTION) {
   const deviceAppOptions = {
@@ -41,6 +59,7 @@ if (process.env.PRODUCTION) {
     ca: fs.readFileSync(process.env.DEVICE_SERVER_CA_PATH),
     requestCert: true,
   };
+  
   // Dynamic route loading
   require('./util/router').boot(deviceApp, 'device');
   https.createServer(deviceAppOptions, deviceApp).listen(process.env.PORT || 3000, function listen() {
@@ -51,11 +70,12 @@ if (process.env.PRODUCTION) {
     console.log(`Webapp HTTPS server started and listening on port ${this.address().port}`);
   });
 } else {
-  require('./util/router').boot(deviceApp, 'device');
-  deviceApp.listen(process.env.PORT || 3000, function listen() {
-    console.log(`Device HTTP server started and listening on port ${this.address().port}`);
-  });
+  // require('./util/router').boot(deviceApp, 'device');
+  // deviceApp.listen(process.env.PORT || 3000, function listen() {
+  //   console.log(`Device HTTP server started and listening on port ${this.address().port}`);
+  // });
   require('./util/router').boot(webApp, 'api');
+  require('./util/router').boot(webApp, 'device');
   webApp.listen(process.env.WEBPORT || 3001, function listen() {
     console.log(`Webapp HTTP server started and listening on port ${this.address().port}`);
   });
