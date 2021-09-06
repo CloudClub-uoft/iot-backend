@@ -31,15 +31,15 @@ webApp.use(cors(corsOptions()));
 
 if (process.env.PRODUCTION) {
   const deviceAppOptions = {
-    key: fs.readFileSync(process.env.WEB_SERVER_KEY_PATH),
-    cert: fs.readFileSync(process.env.WEB_SERVER_CERT_PATH),
-    ca: fs.readFileSync(process.env.WEB_SERVER_CA_PATH),
-  };
-  const webAppOptions = {
     key: fs.readFileSync(process.env.DEVICE_SERVER_KEY_PATH),
     cert: fs.readFileSync(process.env.DEVICE_SERVER_CERT_PATH),
     ca: fs.readFileSync(process.env.DEVICE_SERVER_CA_PATH),
     requestCert: true,
+  };
+  const webAppOptions = {
+    key: fs.readFileSync(process.env.WEBAPP_SERVER_KEY_PATH),
+    cert: fs.readFileSync(process.env.WEBAPP_SERVER_CERT_PATH),
+    ca: fs.readFileSync(process.env.WEBAPP_SERVER_CA_PATH),    
   };
   // Dynamic route loading
   require('./util/router').boot(deviceApp, 'device');
