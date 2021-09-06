@@ -8,31 +8,33 @@ const Device = require('../models/device');
 const { expect } = chai;
 chai.use(chaiHttp);
 
-describe('/POST device/register', () => {
+describe('/GET device/userDevices', () => {
+  const tempMac = faker.internet.mac().replace(/:/g, '');
+  const tempName = faker.internet.userName();
   const email = faker.internet.email();
   let token;
-
-  before(() => {
+  before((done) => {
+    // Register a temp device
     token = jwt.sign({ email }, process.env.JWT_KEY, {
       algorithm: 'HS256',
       expiresIn: 60,
     });
+    new Device({
+      deviceId: tempMac,
+      friendlyName: tempName,
+      userEmail: email,
+    }).save().then(() => done());
   });
 
-  const tempMac = faker.internet.mac().replace(/:/g, '');
-  const friendlyName = faker.internet.userName();
-  it('it should POST the information', (done) => {
+  it('it should GET the registered devices by the user', (done) => {
     chai.request(deviceApp)
-      .post('/device/register')
+      .get('/device/userDevices')
       .set('Cookie', `token=${token}`)
-      .send({ deviceId: tempMac, friendlyName })
-      .end(() => {
-        Device.findOne({ deviceId: tempMac }, (__, doc) => {
-          expect(doc.deviceId).to.equal(tempMac);
-          expect(doc.friendlyName).to.equal(friendlyName);
-        }).then(() => done());
+      .end((_, res) => {
+        expect(res.statusCode).to.equal(200);
+        expect(res.body.userDevices[0].friendlyName).to.equal(tempName);
+        done();
       });
   });
-
   after((done) => { Device.deleteOne({ deviceId: tempMac }).then(() => done()); });
 });

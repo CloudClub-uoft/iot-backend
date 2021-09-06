@@ -13,13 +13,14 @@ describe('/GET device/info', () => {
   const tempMac = faker.internet.mac().replace(/:/g, '');
   const tempName = faker.internet.userName();
   const email = faker.internet.email();
-  const token = jwt.sign({ email }, process.env.JWT_KEY, {
-    algorithm: 'HS256',
-    expiresIn: 60,
-  });
+  let token;
 
   before((done) => {
     // Register a temp device
+    token = jwt.sign({ email }, process.env.JWT_KEY, {
+      algorithm: 'HS256',
+      expiresIn: 60,
+    });
     new Device({
       deviceId: tempMac,
       friendlyName: tempName,
@@ -37,6 +38,5 @@ describe('/GET device/info', () => {
         done();
       });
   });
-
   after((done) => { Device.deleteOne({ deviceId: tempMac }).then(() => done()); });
 });
