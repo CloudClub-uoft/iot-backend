@@ -3,13 +3,13 @@ const chaiHttp = require('chai-http');
 const faker = require('faker');
 const jwt = require('jsonwebtoken');
 
-const { deviceApp } = require('../app');
+const { webApp } = require('../app');
 const Device = require('../models/device');
 
 const { expect } = chai;
 chai.use(chaiHttp);
 
-describe('/POST device/register', () => {
+describe('/POST api/register', () => {
   const email = faker.internet.email();
   let token;
 
@@ -23,7 +23,7 @@ describe('/POST device/register', () => {
   const tempMac = faker.internet.mac().replace(/:/g, '');
   const friendlyName = faker.internet.userName();
   it('it should POST the information', (done) => {
-    chai.request(deviceApp)
+    chai.request(webApp)
       .post('/api/register')
       .set('Cookie', `token=${token}`)
       .send({ deviceId: tempMac, friendlyName })

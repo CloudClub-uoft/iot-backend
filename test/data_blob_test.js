@@ -8,7 +8,7 @@ const jwt = require('jsonwebtoken');
 const s3Client = require('../util/s3'); // configure s3 client
 const BlobLog = require('../models/blobLog');
 
-const { webApp } = require('../app');
+const { deviceApp } = require('../app');
 
 const { expect } = chai;
 chai.use(chaiHttp);
@@ -22,7 +22,7 @@ const fakeMac = 'test_'.concat(faker.internet.mac());
 const checkFile = './README.md';
 const deviceId = fakeMac.replace(/:|\./g, '');
 
-describe('/POST api/data/blob', function test() {
+describe('/POST device/data/blob', function test() {
   this.timeout(10000);
   it('it should POST the blob', (done) => {
     // The checkfile MUST be under 5mb, otherwise it will be split into parts while
@@ -38,7 +38,7 @@ describe('/POST api/data/blob', function test() {
       expiresIn: 60,
     });
 
-    chai.request(webApp)
+    chai.request(deviceApp)
       .post('/device/data/blob')
       .set('Cookie', `token=${token}`)
       .field('deviceId', fakeMac)
