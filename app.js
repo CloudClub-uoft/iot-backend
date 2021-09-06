@@ -21,13 +21,13 @@ webApp.use(express.urlencoded({ extended: true }));
 webApp.use(express.json());
 webApp.use(cookieParser());
 const corsOptions = () => {
-  const protocol = (process.env.PRODUCTION) ? 'https' : 'http';
+  const protocol = (process.env.DEBUG) ? 'http' : 'https';
   return {
     origin: `${protocol}://localhost:${process.env.WEBAPPPORT}`,
     credentials: true,
   };
 };
-webApp.use(cors(corsOptions));
+webApp.use(cors(corsOptions()));
 
 if (process.env.PRODUCTION) {
   const deviceAppOptions = {

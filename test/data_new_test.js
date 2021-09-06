@@ -3,14 +3,14 @@ const jwt = require('jsonwebtoken');
 const chaiHttp = require('chai-http');
 const faker = require('faker');
 
-const { webApp } = require('../app');
+const { deviceApp } = require('../app');
 const Device = require('../models/device');
 const Data = require('../models/data');
 
 const { expect } = chai;
 chai.use(chaiHttp);
 
-describe('/POST api/data/new', () => {
+describe('/POST device/data/new', () => {
   const tempMac = faker.internet.mac();
   const tempName = faker.internet.userName();
   const tempTemperature = faker.datatype.number();
@@ -36,8 +36,8 @@ describe('/POST api/data/new', () => {
   });
 
   it('it should POST the data', (done) => {
-    chai.request(webApp)
-      .post('/api/data/new')
+    chai.request(deviceApp)
+      .post('/device/data/new')
       .set('Cookie', `token=${token}`)
       .send({
         deviceId: tempMac, temperature: tempTemperature, location: tempLocation,

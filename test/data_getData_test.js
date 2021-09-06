@@ -2,15 +2,14 @@ const chai = require('chai');
 const chaiHttp = require('chai-http');
 const faker = require('faker');
 const jwt = require('jsonwebtoken');
-const { deviceApp } = require('../app');
+const { webApp } = require('../app');
 const Device = require('../models/device');
 const Data = require('../models/data');
 
 const { expect } = chai;
 chai.use(chaiHttp);
 
-describe('/GET device/data/getData', function test() {
-  this.timeout(5000);
+describe('/GET /api/data/getData', function test() {  
   const email = faker.internet.email();
   const tempMac = faker.internet.mac();
   const tempName = faker.internet.userName();
@@ -19,9 +18,10 @@ describe('/GET device/data/getData', function test() {
     type: 'Point',
     coordinates: [Number(faker.address.latitude()), Number(faker.address.longitude())],
   };
-  let token;
 
-  before((done) => {
+  let token='';
+  this.timeout(5000);
+  before((done) => {    
     token = jwt.sign({ email }, process.env.JWT_KEY, {
       algorithm: 'HS256',
       expiresIn: 60,
@@ -41,8 +41,8 @@ describe('/GET device/data/getData', function test() {
   });
 
   it('it should GET the data', (done) => {
-    chai.request(deviceApp)
-      .get(`/device/data/getData?mac=${tempMac.replace(/:/g, '')}&points=1`)
+    chai.request(webApp)
+      .get(`/api/data/getData?mac=${tempMac.replace(/:/g, '')}&points=1`)
       .set('Cookie', `token=${token}`)
       .end((_, res) => {
         expect(res.statusCode).to.equal(200);

@@ -3,13 +3,13 @@ const chaiHttp = require('chai-http');
 const faker = require('faker');
 const jwt = require('jsonwebtoken');
 
-const { deviceApp } = require('../app');
+const { webApp } = require('../app');
 const Device = require('../models/device');
 
 const { expect } = chai;
 chai.use(chaiHttp);
 
-describe('/POST device/unregister', () => {
+describe('/POST api/unregister', () => {
   const email = faker.internet.email();
   const tempMac = faker.internet.mac().replace(/:/g, '');
   let token;
@@ -28,8 +28,8 @@ describe('/POST device/unregister', () => {
   });
 
   it('it should use POST to remove the information', (done) => {
-    chai.request(deviceApp)
-      .post('/device/unregister')
+    chai.request(webApp)
+      .post('/api/unregister')
       .set('Cookie', `token=${token}`)
       .send({ deviceId: tempMac })
       .end((_, res) => {

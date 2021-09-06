@@ -2,13 +2,13 @@ const chai = require('chai');
 const chaiHttp = require('chai-http');
 const faker = require('faker');
 const jwt = require('jsonwebtoken');
-const { deviceApp } = require('../app');
+const { webApp } = require('../app');
 const Device = require('../models/device');
 
 const { expect } = chai;
 chai.use(chaiHttp);
 
-describe('/GET device/userDevices', () => {
+describe('/GET api/userDevices', () => {
   const tempMac = faker.internet.mac().replace(/:/g, '');
   const tempName = faker.internet.userName();
   const email = faker.internet.email();
@@ -27,8 +27,8 @@ describe('/GET device/userDevices', () => {
   });
 
   it('it should GET the registered devices by the user', (done) => {
-    chai.request(deviceApp)
-      .get('/device/userDevices')
+    chai.request(webApp)
+      .get('/api/userDevices')
       .set('Cookie', `token=${token}`)
       .end((_, res) => {
         expect(res.statusCode).to.equal(200);

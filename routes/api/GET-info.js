@@ -2,7 +2,7 @@ const Device = require('../../models/device');
 const jwtVerify = require('../../middleware/jwtVerify');
 
 module.exports = (app) => {
-  app.get('/device/info', jwtVerify, (req, res) => {
+  app.get('/api/info', jwtVerify, (req, res) => {
     const userEmail = res.locals.jwtPayload.email;
     if (!req.query.mac) return res.status(400).json({ error: 'No MAC address provided.' });
     // Take MAC address with no symbols as query parameter and reformat with colons

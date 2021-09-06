@@ -5,13 +5,13 @@ const bcrypt = require('bcrypt');
 const forge = require('node-forge');
 const fs = require('fs');
 
-const { deviceApp } = require('../app');
+const { webApp } = require('../app');
 const db = require('../util/mysql');
 
 const { expect } = chai;
 chai.use(chaiHttp);
 
-describe('/POST device/cert', () => {
+describe('/POST api/cert', () => {
   const email = faker.internet.email();
   const password = faker.internet.password();
 
@@ -25,8 +25,8 @@ describe('/POST device/cert', () => {
 
   it('it should authenticate the device and return a client certificate and key', (done) => {
     const caCert = forge.pki.certificateFromPem(fs.readFileSync(process.env.MQTT_SERVER_CA_PATH));
-    chai.request(deviceApp)
-      .post('/device/cert')
+    chai.request(webApp)
+      .post('/api/cert')
       .send({ email, password })
       .end((_, res) => {
         expect(res).to.have.status(200);

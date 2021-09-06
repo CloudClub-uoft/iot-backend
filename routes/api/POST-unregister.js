@@ -2,7 +2,7 @@ const jwtVerify = require('../../middleware/jwtVerify');
 const Device = require('../../models/device');
 
 module.exports = (app) => {
-  app.post('/device/unregister', jwtVerify, (req, res) => {
+  app.post('/api/unregister', jwtVerify, (req, res) => {
     const deviceId = req.body.deviceId.toLowerCase();
     const userEmail = res.locals.jwtPayload.email;
     let deviceOwner = true;
