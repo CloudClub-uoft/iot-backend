@@ -2,7 +2,6 @@ const chai = require('chai');
 const chaiHttp = require('chai-http');
 const faker = require('faker');
 const jwt = require('jsonwebtoken');
-
 const { deviceApp } = require('../app');
 const Device = require('../models/device');
 const Data = require('../models/data');
@@ -31,6 +30,7 @@ describe('/GET device/data/getData', function test() {
     new Device({
       deviceId: tempMac,
       friendlyName: tempName,
+      userEmail: email,
     }).save().then(() => {
       new Data({
         deviceId: tempMac,

@@ -2,7 +2,6 @@ const chai = require('chai');
 const chaiHttp = require('chai-http');
 const faker = require('faker');
 const jwt = require('jsonwebtoken');
-
 const { deviceApp } = require('../app');
 const Device = require('../models/device');
 
