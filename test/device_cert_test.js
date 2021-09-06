@@ -26,7 +26,7 @@ describe('/POST device/cert', () => {
   it('it should authenticate the device and return a client certificate and key', (done) => {
     const caCert = forge.pki.certificateFromPem(fs.readFileSync(process.env.MQTT_SERVER_CA_PATH));
     chai.request(deviceApp)
-      .post('/device/cert')
+      .post('/api/cert')
       .send({ email, password })
       .end((_, res) => {
         expect(res).to.have.status(200);

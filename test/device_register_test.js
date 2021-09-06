@@ -24,7 +24,7 @@ describe('/POST device/register', () => {
   const friendlyName = faker.internet.userName();
   it('it should POST the information', (done) => {
     chai.request(deviceApp)
-      .post('/device/register')
+      .post('/api/register')
       .set('Cookie', `token=${token}`)
       .send({ deviceId: tempMac, friendlyName })
       .end(() => {

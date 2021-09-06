@@ -37,7 +37,7 @@ describe('/POST api/data/new', () => {
 
   it('it should POST the data', (done) => {
     chai.request(webApp)
-      .post('/api/data/new')
+      .post('/device/data/new')
       .set('Cookie', `token=${token}`)
       .send({
         deviceId: tempMac, temperature: tempTemperature, location: tempLocation,

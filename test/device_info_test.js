@@ -29,7 +29,7 @@ describe('/GET device/info', () => {
 
   it('it should GET the device information', (done) => {
     chai.request(deviceApp)
-      .get(`/device/info?mac=${tempMac}`)
+      .get(`/api/info?mac=${tempMac}`)
       .set('Cookie', `token=${token}`)
       .end((_, res) => {
         expect(res.statusCode).to.equal(200);

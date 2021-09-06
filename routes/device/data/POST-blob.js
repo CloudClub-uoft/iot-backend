@@ -6,7 +6,7 @@ const s3Client = require('../../../util/s3'); // configure s3 client
 const BlobLog = require('../../../models/blobLog');
 
 module.exports = (app) => {
-  app.post('/api/data/blob', jwtVerify, (req, res, next) => {
+  app.post('/device/data/blob', jwtVerify, (req, res, next) => {
     const uploadStream = (file) => {
       const pass = new PassThrough();
       s3Client.upload(

@@ -39,7 +39,7 @@ describe('/POST api/data/blob', function test() {
     });
 
     chai.request(webApp)
-      .post('/api/data/blob')
+      .post('/device/data/blob')
       .set('Cookie', `token=${token}`)
       .field('deviceId', fakeMac)
       .attach('testfile', checkFile)

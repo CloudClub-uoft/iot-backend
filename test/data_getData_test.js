@@ -42,7 +42,7 @@ describe('/GET device/data/getData', function test() {
 
   it('it should GET the data', (done) => {
     chai.request(deviceApp)
-      .get(`/device/data/getData?mac=${tempMac.replace(/:/g, '')}&points=1`)
+      .get(`/api/data/getData?mac=${tempMac.replace(/:/g, '')}&points=1`)
       .set('Cookie', `token=${token}`)
       .end((_, res) => {
         expect(res.statusCode).to.equal(200);
