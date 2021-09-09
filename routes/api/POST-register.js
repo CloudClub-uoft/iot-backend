@@ -14,7 +14,7 @@ module.exports = (app) => {
         friendlyName,
         userEmail,
       }).save();
-      return res.status(200).json({ 'Status:': 'Success' });
+      return res.status(200).json({ 'Status': 'Success' });
     });
   });
 };
