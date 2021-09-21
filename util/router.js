@@ -1,14 +1,14 @@
 const fs = require('fs');
 const path = require('path');
-
 const routePath = path.resolve('./routes');
+const baseName = `.*routes.*${appDir}.*`;
 
 exports.boot = (app, appDir) => {
   (function traverse(dir) {
     fs.readdirSync(dir).forEach((file) => {
       const dirPath = path.join(dir, file);
       const isDirectory = fs.lstatSync(dirPath).isDirectory();
-      if (isDirectory && dirPath.includes(`routes\\${appDir}`)) traverse(dirPath);
+      if (isDirectory && dirPath.match(baseName)) traverse(dirPath);
       if (!isDirectory) {
         // routes/filename, slicing off '.js'
         const cleanPath = `${dir}/${file.substr(0, file.indexOf('.'))}`;
